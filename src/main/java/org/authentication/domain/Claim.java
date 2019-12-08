@@ -8,15 +8,17 @@ import javax.validation.constraints.Size;
 @Table(name = "Claims")
 public class Claim {
     @Id
+    @Column(name = "claimid")
     private int ClaimId;
-
-    @ManyToOne
-    @JoinColumn(name = "UserId", table = "Users")
-    private User User;
 
     @NotBlank
     @Size(min = 1, max = 50)
+    @Column(name = "resourceid")
     private String ResourceId;
+
+    @ManyToOne
+    @JoinColumn(name = "userid")
+    private User User;
 
     public int getClaimId() {
         return ClaimId;
@@ -24,14 +26,6 @@ public class Claim {
 
     public void setClaimId(int claimId) {
         ClaimId = claimId;
-    }
-
-    public User getSecurityProfile() {
-        return User;
-    }
-
-    public void setSecurityProfile(User User) {
-        User = User;
     }
 
     public String getResourceId() {

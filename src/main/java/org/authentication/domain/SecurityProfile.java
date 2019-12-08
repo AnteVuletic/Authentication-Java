@@ -6,19 +6,16 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
-@Table(name = "SecurityProfiles")
+@Table(name = "securityprofiles")
 public class SecurityProfile {
     @Id
+    @Column(name = "securityprofileid")
     private int SecurityProfileId;
 
     @NotBlank
-    @Column(unique = true)
+    @Column(unique = true, name = "name")
     @Size(min = 1, max = 30)
     private String Name;
-
-    @OneToMany
-    @JoinColumn(name = "Users")
-    private List<User> Users;
 
     public int getSecurityProfileId() {
         return SecurityProfileId;
