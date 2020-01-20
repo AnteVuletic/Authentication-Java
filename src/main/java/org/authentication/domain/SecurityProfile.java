@@ -10,26 +10,26 @@ import java.util.List;
 public class SecurityProfile {
     @Id
     @Column(name = "securityprofileid")
-    private int SecurityProfileId;
+    public int securityProfileId;
 
     @NotBlank
     @Column(unique = true, name = "name")
     @Size(min = 1, max = 30)
-    private String Name;
+    public String name;
 
     public int getSecurityProfileId() {
-        return SecurityProfileId;
+        return securityProfileId;
     }
 
     public void setSecurityProfileId(int securityProfileId) {
-        SecurityProfileId = securityProfileId;
+        this.securityProfileId = securityProfileId;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 }

@@ -9,30 +9,38 @@ import javax.validation.constraints.Size;
 public class Claim {
     @Id
     @Column(name = "claimid")
-    private int ClaimId;
+    public int claimId;
 
     @NotBlank
     @Size(min = 1, max = 50)
     @Column(name = "resourceid")
-    private String ResourceId;
+    public String resourceId;
 
     @ManyToOne
     @JoinColumn(name = "userid")
-    private User User;
+    public User user;
 
     public int getClaimId() {
-        return ClaimId;
+        return claimId;
     }
 
     public void setClaimId(int claimId) {
-        ClaimId = claimId;
+        this.claimId = claimId;
     }
 
     public String getResourceId() {
-        return ResourceId;
+        return resourceId;
     }
 
     public void setResourceId(String resourceId) {
-        ResourceId = resourceId;
+        this.resourceId = resourceId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

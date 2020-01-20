@@ -12,92 +12,100 @@ import java.util.Date;
 public class User {
     @Id
     @Column(name = "userid")
-    private String UserId;
+    public String userId;
 
     @NotBlank
     @Column(unique = true, name= "email")
     @Size(min = 1, max = 30)
-    private String Email;
+    public String email;
 
     @NotBlank
     @Column(name = "password")
     @Size(min = 5, max = 50)
-    private String Password;
+    public String password;
 
     @NotBlank
     @Column(name = "firstname")
-    private String FirstName;
+    public String firstName;
 
     @NotBlank
     @Column(name = "lastname")
-    private String LastName;
+    public String lastName;
 
     @NotBlank
     @Temporal(TemporalType.DATE)
     @Column(name = "dateofbirth")
-    private Date DateOfBirth;
+    public Date dateOfBirth;
 
     @Column(name = "isactive")
     @Type(type = "org.hibernate.type.NumericBooleanType")
-    private boolean IsActive;
+    public boolean isActive;
 
     @ManyToOne
     @JoinColumn(name = "securityprofileid")
-    private SecurityProfile SecurityProfile;
+    public SecurityProfile securityProfile;
 
     public String getUserId() {
-        return UserId;
+        return userId;
     }
 
     public void setUserId(String userId) {
-        UserId = userId;
+        this.userId = userId;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
 
     public void setPassword(String password) {
-        Password = password;
+        this.password = password;
     }
 
     public String getFirstName() {
-        return FirstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
-        FirstName = firstName;
+        this.firstName = firstName;
     }
 
     public String getLastName() {
-        return LastName;
+        return lastName;
     }
 
     public void setLastName(String lastName) {
-        LastName = lastName;
+        this.lastName = lastName;
     }
 
     public Date getDateOfBirth() {
-        return DateOfBirth;
+        return dateOfBirth;
     }
 
     public void setDateOfBirth(Date dateOfBirth) {
-        DateOfBirth = dateOfBirth;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public boolean isActive() {
-        return IsActive;
+        return isActive;
     }
 
     public void setActive(boolean active) {
-        IsActive = active;
+        isActive = active;
+    }
+
+    public SecurityProfile getSecurityProfile() {
+        return securityProfile;
+    }
+
+    public void setSecurityProfile(SecurityProfile securityProfile) {
+        this.securityProfile = securityProfile;
     }
 }
