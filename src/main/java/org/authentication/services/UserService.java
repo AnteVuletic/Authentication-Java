@@ -49,6 +49,6 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException(s);
         }
 
-        return new org.springframework.security.core.userdetails.User(user.email, user.password, Collections.emptyList())
+        return new org.springframework.security.core.userdetails.User(user.email, user.password, Collections.emptyList());
     }
 }
