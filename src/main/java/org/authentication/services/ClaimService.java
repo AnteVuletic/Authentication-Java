@@ -29,9 +29,9 @@ public class ClaimService {
         this.claimRepository.save(claim);
     }
 
-    public void deleteUserClaim(Claim claim, User user) {
+    public void deleteUserClaim(Claim claim) {
         if (!this.securityProfileService.validateLoggedInUserIsSuperAdmin()) throw new AuthorizationServiceException("User not super admin");
-        Claim claimDb = this.claimRepository.findClaimByUserAndAndClaimId(user, claim.claimId);
+        Claim claimDb = this.claimRepository.findByClaimId(claim.claimId);
         this.claimRepository.delete(claimDb);
     }
 }

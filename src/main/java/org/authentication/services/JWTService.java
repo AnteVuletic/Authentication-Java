@@ -35,7 +35,6 @@ public class JWTService {
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
-
     }
 
     public boolean validateToken(String token, UserDetails client) {

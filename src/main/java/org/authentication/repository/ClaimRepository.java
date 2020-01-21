@@ -8,5 +8,5 @@ import java.util.ArrayList;
 
 public interface ClaimRepository extends CrudRepository<Claim, Integer> {
     ArrayList<Claim> getAllByUser(User user);
-    Claim findClaimByUserAndAndClaimId(User user, int ClaimId);
+    Claim findByClaimId(int id);
 }

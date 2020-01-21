@@ -1,6 +1,5 @@
 package org.authentication.repository;
 
-import org.authentication.domain.SecurityProfile;
 import org.authentication.domain.User;
 import org.springframework.data.repository.CrudRepository;
 

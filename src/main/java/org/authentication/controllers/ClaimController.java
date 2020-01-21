@@ -25,8 +25,8 @@ public class ClaimController {
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public ResponseEntity<?> delete(@RequestBody Claim claim, @RequestBody User user) {
-        this.claimService.deleteUserClaim(claim, user);
+    public ResponseEntity<?> delete(@RequestBody Claim claim) {
+        this.claimService.deleteUserClaim(claim);
         return ResponseEntity.ok("Claim deleted");
     }
 }

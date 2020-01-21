@@ -1,0 +1,79 @@
+import axios from "axios";
+
+const base = "http://localhost:8080/api";
+
+const baseUser = `${base}/user`;
+const securityProfileBase = `${base}/security-profile`;
+const claimBase = `${base}/claim`;
+
+const userEndpoints = {
+  register: `${baseUser}/register`,
+  authenticate: `${baseUser}/authenticate`,
+  refreshToken: `${baseUser}/refresh-token`
+};
+
+const securityProfileEndpoints = {
+  getAll: securityProfileBase,
+  get: `${securityProfileBase}/get`,
+  editUser: `${securityProfileBase}/edit-user`,
+  add: `${securityProfileBase}/add`
+};
+
+const claimEndpoints = {
+  add: `${claimBase}/add`,
+  delete: `${claimBase}/delete`
+};
+
+export const register = ({
+  email,
+  password,
+  firstName,
+  lastName,
+  dateOfBirth
+}) => {
+  return axios.post(userEndpoints.register, {
+    email,
+    password,
+    firstName,
+    lastName,
+    dateOfBirth
+  });
+};
+
+export const authenticate = ({ email, password }) => {
+  return axios.post(userEndpoints.authenticate, { email, password });
+};
+
+export const refreshToken = token => {
+ return axios.get(userEndpoints.refreshToken + `?token=${token}`);
+}
+
+export const getAll = () => {
+  return axios.get(securityProfileEndpoints.getAll);
+};
+
+export const getAllUsersBySecurityProfileId = ({ id }) => {
+  return axios.get(securityProfileEndpoints.get + `?id=${id}`);
+};
+
+export const editUserSecurityProfile = ({
+  user: { userId, email, securityProfile },
+  securityProfile: { securityProfileId, name }
+}) => {
+  return axios.post(securityProfileEndpoints.editUser, {
+    user,
+    securityProfile
+  });
+};
+
+export const addSecurityProfile = ({ securityProfile: { name } }) => {
+  return axios.post(securityProfileEndpoints.add, { securityProfile });
+};
+
+export const addClaim = ({ claim: { resourceId }, user }) => {
+  return axios.post(claimEndpoints.add, { claim, user });
+};
+
+export const deleteClaim = ({ claim }) => {
+  return axios.post(claimEndpoints.delete, { claim });
+};

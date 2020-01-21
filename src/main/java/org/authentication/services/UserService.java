@@ -37,6 +37,7 @@ public class UserService implements UserDetailsService {
         user.userId =  UUID.randomUUID().toString();
         user.password = bCryptPasswordEncoder.encode(user.password);
         user.securityProfile = securityProfile;
+        user.isActive = true;
         this.userRepository.save(user);
     }
 

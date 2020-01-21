@@ -9,10 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -56,5 +53,13 @@ public class UserController {
         User userDb = this.userService.findUserByEmail(user.email);
         String token = this.jwtService.generateToken(userDb);
         return ResponseEntity.ok(token);
+    }
+
+    @RequestMapping(value = "/refresh-token", method = RequestMethod.GET)
+    public ResponseEntity<String> RefreshToken(@RequestParam(name = "token") String token) {
+        String email = this.jwtService.getEmailFromToken(token);
+        User user = this.userService.findUserByEmail(email);
+        String tokenNew = this.jwtService.generateToken(user);
+        return ResponseEntity.ok(tokenNew);
     }
 }
