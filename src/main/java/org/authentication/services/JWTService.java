@@ -3,17 +3,25 @@ package org.authentication.services;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.authentication.domain.Claim;
 import org.authentication.domain.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class JWTService {
+    private final ClaimService claimService;
     public static final long JWT_TOKEN_VALIDITY = 60 * 60 * 24 * 2;
     // Seconds * Minutes * Hours * Days
+
+    public JWTService(ClaimService claimService) {
+        this.claimService = claimService;
+    }
 
     @Value("${jwt.secret}")
     private String secret;
@@ -29,8 +37,10 @@ public class JWTService {
     }
 
     public String generateToken(User user) {
+        Map<String, Object> map = this.claimService.getClaims(user);
         return Jwts.builder()
                 .setSubject(user.email)
+                .setClaims(map)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret)

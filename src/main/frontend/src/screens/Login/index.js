@@ -22,7 +22,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      await authenticate(values);
+      await authenticate(values.email, values.password);
       setHasLoggedIn(true);
       console.log("success");
     } catch (err) {

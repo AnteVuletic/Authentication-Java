@@ -17,6 +17,8 @@ public class SecurityProfile {
     @Size(min = 1, max = 30)
     public String name;
 
+    public SecurityProfile() {}
+
     public int getSecurityProfileId() {
         return securityProfileId;
     }

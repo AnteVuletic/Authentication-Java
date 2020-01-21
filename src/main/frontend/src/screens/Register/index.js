@@ -20,8 +20,7 @@ const initialValues = {
   password: "",
   repeatPassword: "",
   firstName: "",
-  lastName: "",
-  dateOfBirth: ""
+  lastName: ""
 };
 
 const Register = () => {
@@ -84,17 +83,6 @@ const Register = () => {
             placeholder="Last name"
             name="lastName"
             value={values.lastName}
-            onChange={handleChange}
-          />
-        </Form.Group>
-
-        <Form.Group>
-          <Form.Label>Date of birth</Form.Label>
-          <Form.Control
-            type="date"
-            placeholder="Date of birth"
-            name="dateOfBirth"
-            value={values.dateOfBirth}
             onChange={handleChange}
           />
         </Form.Group>

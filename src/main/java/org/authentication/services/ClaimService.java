@@ -5,7 +5,13 @@ import org.authentication.domain.User;
 import org.authentication.repository.ClaimRepository;
 import org.authentication.repository.UserRepository;
 import org.springframework.security.access.AuthorizationServiceException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class ClaimService {
@@ -33,5 +39,18 @@ public class ClaimService {
         if (!this.securityProfileService.validateLoggedInUserIsSuperAdmin()) throw new AuthorizationServiceException("User not super admin");
         Claim claimDb = this.claimRepository.findByClaimId(claim.claimId);
         this.claimRepository.delete(claimDb);
+    }
+
+    public Map<String, Object> getClaims(User user) {
+        ArrayList<Claim> claims = this.claimRepository.getAllByUser(user);
+        Map<String, Object> map = new HashMap<>();
+        claims.forEach(claim -> {
+            map.put("resourceId", claim.resourceId);
+        });
+        return map;
+    }
+
+    public boolean hasClaimByUserId(String resourceId, String userId) {
+        return this.claimRepository.existsClaimsByResourceIdAndUser_UserId(resourceId, userId);
     }
 }

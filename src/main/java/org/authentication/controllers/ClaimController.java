@@ -29,4 +29,10 @@ public class ClaimController {
         this.claimService.deleteUserClaim(claim);
         return ResponseEntity.ok("Claim deleted");
     }
+
+    @RequestMapping(value = "/check-has-claim")
+    public ResponseEntity<?> CheckHasClaim(@RequestBody Claim claim) {
+        boolean hasClaim = this.claimService.hasClaimByUserId(claim.resourceId, claim.user.userId);
+        return ResponseEntity.ok(hasClaim);
+    }
 }

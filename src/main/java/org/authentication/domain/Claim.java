@@ -20,6 +20,8 @@ public class Claim {
     @JoinColumn(name = "userid")
     public User user;
 
+    public Claim() {}
+
     public int getClaimId() {
         return claimId;
     }

@@ -4,8 +4,6 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.util.Date;
 
 @Entity
 @Table(name = "Users")
@@ -16,12 +14,10 @@ public class User {
 
     @NotBlank
     @Column(unique = true, name= "email")
-    @Size(min = 1, max = 30)
     public String email;
 
     @NotBlank
     @Column(name = "password")
-    @Size(min = 5, max = 50)
     public String password;
 
     @NotBlank
@@ -32,11 +28,6 @@ public class User {
     @Column(name = "lastname")
     public String lastName;
 
-    @NotBlank
-    @Temporal(TemporalType.DATE)
-    @Column(name = "dateofbirth")
-    public Date dateOfBirth;
-
     @Column(name = "isactive")
     @Type(type = "org.hibernate.type.NumericBooleanType")
     public boolean isActive;
@@ -44,6 +35,8 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "securityprofileid")
     public SecurityProfile securityProfile;
+
+    public User(){}
 
     public String getUserId() {
         return userId;
@@ -83,14 +76,6 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
     }
 
     public boolean isActive() {
