@@ -40,40 +40,41 @@ export const register = ({
   });
 };
 
-export const authenticate = ({ email, password }) => {
+export const authenticate = (email, password) => {
   return axios.post(userEndpoints.authenticate, { email, password });
 };
 
 export const refreshToken = token => {
- return axios.get(userEndpoints.refreshToken + `?token=${token}`);
-}
+  return axios.get(userEndpoints.refreshToken + `?token=${token}`);
+};
 
-export const getAll = () => {
+export const getAllSecurityProfiles = () => {
   return axios.get(securityProfileEndpoints.getAll);
 };
 
-export const getAllUsersBySecurityProfileId = ({ id }) => {
+export const getAllUsersBySecurityProfileId = id => {
   return axios.get(securityProfileEndpoints.get + `?id=${id}`);
 };
 
-export const editUserSecurityProfile = ({
-  user: { userId, email, securityProfile },
-  securityProfile: { securityProfileId, name }
-}) => {
+// user: { userId, email, securityProfile },
+// securityProfile: { securityProfileId, name }
+export const editUserSecurityProfile = (user, securityProfile) => {
   return axios.post(securityProfileEndpoints.editUser, {
     user,
     securityProfile
   });
 };
 
-export const addSecurityProfile = ({ securityProfile: { name } }) => {
-  return axios.post(securityProfileEndpoints.add, { securityProfile });
+// { securityProfile: { name } }
+export const addSecurityProfile = securityProfile => {
+  return axios.post(securityProfileEndpoints.add, securityProfile);
 };
 
-export const addClaim = ({ claim: { resourceId }, user }) => {
+// { claim: { resourceId }, user }
+export const addClaim = (claim, user) => {
   return axios.post(claimEndpoints.add, { claim, user });
 };
 
-export const deleteClaim = ({ claim }) => {
-  return axios.post(claimEndpoints.delete, { claim });
+export const deleteClaim = claim => {
+  return axios.post(claimEndpoints.delete, claim);
 };

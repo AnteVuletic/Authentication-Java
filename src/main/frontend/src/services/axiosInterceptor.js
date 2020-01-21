@@ -1,29 +1,29 @@
-import axios from 'axios';
-import { history } from '../utils/BrowserHistoryWrapper';
-import { refreshToken } from './common';
+import axios from "axios";
+import { history } from "../utils/BrowserHistoryWrapper";
+import { refreshToken } from "./common";
 
 export const configureAxios = () => {
-  axios.defaults.headers.post['Content-Type'] = 'application/json';
+  axios.defaults.headers.post["Content-Type"] = "application/json";
 
   axios.interceptors.request.use(config => {
-    const token = `Bearer ${localStorage.getItem('token')}`;
-    config.headers['Authorization'] = token;
+    const token = `Bearer ${localStorage.getItem("token")}`;
+    config.headers["Authorization"] = token;
 
     return config;
   });
 
   const handleRedirectToLogin = () => {
-    localStorage.removeItem('token');
-    history.push('/login');
+    localStorage.removeItem("token");
+    history.push("/login");
   };
 
   axios.interceptors.response.use(
     response => response,
     error => {
       let originalRequest = error.config;
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (error.response && error.response.status === 401 && !token) {
-        history.push('/login');
+        history.push("/login");
 
         return Promise.reject(error);
       } else if (
@@ -41,7 +41,7 @@ export const configureAxios = () => {
 
             return;
           }
-          localStorage.setItem('token', data);
+          localStorage.setItem("token", data);
 
           return axios(originalRequest);
         });
@@ -55,6 +55,6 @@ export const configureAxios = () => {
       }
 
       return Promise.reject(error);
-    },
+    }
   );
 };
