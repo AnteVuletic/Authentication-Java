@@ -21,7 +21,8 @@ const securityProfileEndpoints = {
 
 const claimEndpoints = {
   add: `${claimBase}/add`,
-  delete: `${claimBase}/delete`
+  delete: `${claimBase}/delete`,
+  get: `${claimBase}/get`
 };
 
 export const register = ({
@@ -77,4 +78,8 @@ export const addClaim = (claim, user) => {
 
 export const deleteClaim = claim => {
   return axios.post(claimEndpoints.delete, claim);
+};
+
+export const getAllUserClaims = ({ userId }) => {
+  return axios.get(claimEndpoints.get + `?id=${userId}`);
 };

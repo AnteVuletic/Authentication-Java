@@ -4,10 +4,9 @@ import org.authentication.domain.Claim;
 import org.authentication.domain.User;
 import org.authentication.services.ClaimService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/claim")
@@ -34,5 +33,11 @@ public class ClaimController {
     public ResponseEntity<?> CheckHasClaim(@RequestBody Claim claim) {
         boolean hasClaim = this.claimService.hasClaimByUserId(claim.resourceId, claim.user.userId);
         return ResponseEntity.ok(hasClaim);
+    }
+
+    @RequestMapping(value = "get", method = RequestMethod.GET)
+    public ResponseEntity<?> Get(@RequestParam(name = "id") String id) {
+        ArrayList<Claim> claims = this.claimService.getClaimByUser(id);
+        return ResponseEntity.ok(claims);
     }
 }

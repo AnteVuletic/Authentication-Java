@@ -50,6 +50,10 @@ public class ClaimService {
         return map;
     }
 
+    public ArrayList<Claim> getClaimByUser(String userId) {
+        return this.claimRepository.getAllByUser_UserId(userId);
+    }
+
     public boolean hasClaimByUserId(String resourceId, String userId) {
         return this.claimRepository.existsClaimsByResourceIdAndUser_UserId(resourceId, userId);
     }
