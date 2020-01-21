@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import Login from "../Login";
 import Register from "../Register";
+import Admin from "../Admin";
 
 const AppLayoutScene = ({ children, screenOnly }) => {
   const currentRoute = window.location.href;
@@ -18,7 +19,12 @@ const AppLayout = () => {
     <Switch>
       <Route exact path="/">
         <AppLayoutScene>
-          <span> Test</span>
+          <span>Default user</span>
+        </AppLayoutScene>
+      </Route>
+      <Route path="/admin">
+        <AppLayoutScene>
+          <Admin />
         </AppLayoutScene>
       </Route>
       <Route path="/login">

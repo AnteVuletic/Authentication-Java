@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { register } from "../../services/common";
 
 import { ScreenContainer } from "../index.styled";
@@ -25,6 +25,7 @@ const initialValues = {
 
 const Register = () => {
   const [values, setValues] = useState(initialValues);
+  const [hasRegistered, setHasRegistered] = useState(false);
 
   const handleChange = event => {
     const newValues = { ...values };
@@ -45,11 +46,15 @@ const Register = () => {
 
     try {
       await register(values);
-      console.log("success");
+      setHasRegistered(true);
     } catch (err) {
       console.log(err);
     }
   };
+
+  if (hasRegistered) {
+    return <Redirect to="/login" />;
+  }
 
   return (
     <ScreenContainer>

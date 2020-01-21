@@ -22,9 +22,9 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      await authenticate(values.email, values.password);
+      const token = await authenticate(values.email, values.password);
+      localStorage.setItem("token", `Bearer ${token}`);
       setHasLoggedIn(true);
-      console.log("success");
     } catch (err) {
       console.log(err);
       window.alert("Invalid credentials");
@@ -32,7 +32,7 @@ const Login = () => {
   };
 
   if (hasLoggedIn) {
-    return <Redirect to="/" />;
+    return <Redirect to="/admin" />;
   }
 
   return (
