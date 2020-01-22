@@ -1,18 +1,27 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { authenticate } from "../../services/common";
 
+import { history } from "../../utils/BrowserHistoryWrapper";
 import { ScreenContainer } from "../index.styled";
+import { loginRegisterTest } from "../../utils/loginRegisterTest";
 
 const initialValues = {
   email: "",
   password: ""
 };
 
+const redirect = role => {
+  if (role === "SuperAdmin") {
+    history.push("/admin");
+  } else {
+    history.push("/");
+  }
+};
+
 const Login = () => {
   const [values, setValues] = useState(initialValues);
-  const [hasLoggedIn, setHasLoggedIn] = useState(false);
 
   const handleChange = event => {
     const newValues = { ...values };
@@ -22,17 +31,17 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const token = await authenticate(values.email, values.password);
-      localStorage.setItem("token", `Bearer ${token}`);
-      setHasLoggedIn(true);
+      const response = await authenticate(values.email, values.password);
+      localStorage.setItem("token", `Bearer ${response.data.token}`);
+      localStorage.setItem("role", response.data.role);
+      window.location.reload();
     } catch (err) {
-      console.log(err);
       window.alert("Invalid credentials");
     }
   };
 
-  if (hasLoggedIn) {
-    return <Redirect to="/admin" />;
+  if (loginRegisterTest()) {
+    return redirect(localStorage.getItem("role"));
   }
 
   return (

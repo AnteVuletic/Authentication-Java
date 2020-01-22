@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
+
+import Landing from "../Landing";
 import Login from "../Login";
 import Register from "../Register";
 import Admin from "../Admin";
@@ -19,7 +21,7 @@ const AppLayout = () => {
     <Switch>
       <Route exact path="/">
         <AppLayoutScene>
-          <span>Default user</span>
+          <Landing />
         </AppLayoutScene>
       </Route>
       <Route path="/admin">

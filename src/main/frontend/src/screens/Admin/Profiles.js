@@ -21,16 +21,6 @@ const Profiles = () => {
       </Accordion>
     </ScreenContainer>
   );
-
-
-
-
-
-
-
-
-
-  return <div>profiles</div>;
 };
 
 

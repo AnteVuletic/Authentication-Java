@@ -18,7 +18,9 @@ const Users = () => {
     { securityProfileId: 3, name: "test3" }
   ]);
 
-  useEffect(() => {});
+  useEffect(() => {
+    getAllSecurityProfiles().then(({data}) => setSecurityProfiles(data))
+  }, []);
   useEffect(() => {});
 
   return (

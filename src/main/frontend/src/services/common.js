@@ -45,8 +45,8 @@ export const authenticate = (email, password) => {
   return axios.post(userEndpoints.authenticate, { email, password });
 };
 
-export const refreshToken = token => {
-  return axios.get(userEndpoints.refreshToken + `?token=${token}`);
+export const refreshToken = () => {
+  return axios.get(userEndpoints.refreshToken);
 };
 
 export const getAllSecurityProfiles = () => {

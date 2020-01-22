@@ -39,8 +39,8 @@ public class JWTService {
     public String generateToken(User user) {
         Map<String, Object> map = this.claimService.getClaims(user);
         return Jwts.builder()
-                .setSubject(user.email)
                 .setClaims(map)
+                .setSubject(user.email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret)
@@ -53,7 +53,9 @@ public class JWTService {
     }
 
     public String getEmailFromToken(String token) {
-        return getAllClaimsFromToken(token).getSubject();
+        Claims body = getAllClaimsFromToken(token);
+        String email = body.getSubject();
+        return email;
     }
 
     private Claims getAllClaimsFromToken(String token) {

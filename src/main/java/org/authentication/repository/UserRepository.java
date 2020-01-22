@@ -8,5 +8,5 @@ import java.util.ArrayList;
 public interface UserRepository extends CrudRepository<User, String> {
     User findByEmail(String email);
     ArrayList<User> getAllBySecurityProfile_SecurityProfileId(int securityProfileId);
-    boolean countAllBySecurityProfile_NameAndEmail(String profileName, String email);
+    int countAllBySecurityProfile_NameAndEmail(String profileName, String email);
 }

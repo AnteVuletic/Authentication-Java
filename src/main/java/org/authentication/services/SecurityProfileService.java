@@ -32,7 +32,7 @@ public class SecurityProfileService {
         } else {
             email = principal.toString();
         }
-        return this.userRepository.countAllBySecurityProfile_NameAndEmail("SuperAdmin", email);
+        return this.userRepository.countAllBySecurityProfile_NameAndEmail("SuperAdmin", email) != 0;
     }
 
     public ArrayList<User> getAllUsersBySecurityProfile(int securityProfileId) {

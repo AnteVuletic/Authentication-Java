@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Switch, Route, Redirect, Link } from "react-router-dom";
-import { Navbar } from "react-bootstrap";
+import { Navbar, Button } from "react-bootstrap";
 import { NavItem } from "../index.styled";
 
+import { signout } from "../../utils/signout";
 import Users from "./Users";
 import Profiles from "./Profiles";
 
@@ -30,23 +31,21 @@ const AdminNavbar = () => {
       <NavItem>
         <Link to="/admin/profiles">Profiles</Link>
       </NavItem>
+      <NavItem onClick={signout}>
+        <Button variant="primary">Sign out</Button>
+      </NavItem>
     </Navbar>
   );
 };
 
+const isAdmin = () => {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+  return token && token.length !== 0 && role && role === "SuperAdmin";
+};
+
 const Admin = () => {
-  const [isAdmin, setIsAdmin] = useState(true);
-
-  useEffect(() => {
-    try {
-      console.log("async check is admin");
-    } catch (err) {
-      console.log(err);
-      setIsAdmin(false);
-    }
-  }, []);
-
-  if (!isAdmin) {
+  if (!isAdmin()) {
     return <Redirect to="/" />;
   }
 
