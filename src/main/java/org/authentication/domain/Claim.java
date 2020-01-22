@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 @Table(name = "Claims")
 public class Claim {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "claimid")
     public int claimId;
 

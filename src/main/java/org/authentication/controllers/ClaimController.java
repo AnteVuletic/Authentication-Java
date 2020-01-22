@@ -1,5 +1,6 @@
 package org.authentication.controllers;
 
+import org.authentication.datatransferobjects.AddClaimUser;
 import org.authentication.domain.Claim;
 import org.authentication.domain.User;
 import org.authentication.services.ClaimService;
@@ -18,8 +19,8 @@ public class ClaimController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<?> add(@RequestBody Claim claim, @RequestBody User user) {
-        this.claimService.addUserClaim(claim, user);
+    public ResponseEntity<?> add(@RequestBody AddClaimUser addClaimUser) {
+        this.claimService.addUserClaim(addClaimUser.claim, addClaimUser.user);
         return ResponseEntity.ok("Claim added");
     }
 

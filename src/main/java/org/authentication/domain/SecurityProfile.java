@@ -9,6 +9,7 @@ import java.util.List;
 @Table(name = "securityprofiles")
 public class SecurityProfile {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "securityprofileid")
     public int securityProfileId;
 

@@ -1,7 +1,12 @@
-import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import React, { useState, useEffect, useCallback } from "react";
+import { Card, Form, Button, ListGroup } from "react-bootstrap";
 
-import { editUserSecurityProfile } from "../../services/common";
+import {
+  editUserSecurityProfile,
+  getAllUserClaims,
+  addClaim,
+  deleteClaim
+} from "../../services/common";
 import { CardStyled, CardHeaderStyled } from "../index.styled";
 
 const UserCard = ({ user, securityProfiles, setFilteredSecurityProfile }) => {
@@ -9,6 +14,18 @@ const UserCard = ({ user, securityProfiles, setFilteredSecurityProfile }) => {
     user.securityProfile.securityProfileId
   );
   const [areClaimsDisplayed, setAreClaimsDisplayed] = useState(false);
+  const [userClaims, setUserClaims] = useState([]);
+  const [newClaim, setNewClaim] = useState("");
+
+  const refreshUserClaims = useCallback(() => {
+    getAllUserClaims({ userId: user.userId }).then(({ data }) =>
+      setUserClaims(data)
+    );
+  }, [user.userId]);
+
+  useEffect(() => {
+    refreshUserClaims();
+  }, [refreshUserClaims]);
 
   const handleSaveChanges = () => {
     const userNewSecurityProfile = securityProfiles.find(
@@ -21,6 +38,25 @@ const UserCard = ({ user, securityProfiles, setFilteredSecurityProfile }) => {
 
   const toggleClaims = () => {
     setAreClaimsDisplayed(!areClaimsDisplayed);
+    if (areClaimsDisplayed) {
+      refreshUserClaims();
+    }
+  };
+
+  const addNewClaim = () => {
+    if (newClaim.length !== 0) {
+      addClaim({ resourceId: newClaim }, user).then(() => {
+        setNewClaim("");
+        refreshUserClaims();
+      });
+    }
+  };
+
+  const deleteClaimOnIndex = index => {
+    const claimToDelete = userClaims[index];
+    deleteClaim(claimToDelete).then(() => {
+      refreshUserClaims();
+    });
   };
 
   return (
@@ -56,14 +92,42 @@ const UserCard = ({ user, securityProfiles, setFilteredSecurityProfile }) => {
             ))}
           </Form.Control>
         </Form>
-        <div>
-          <Button variant="primary" onClick={handleSaveChanges}>
-            Save
-          </Button>
-          <Button variant="info" onClick={toggleClaims}>
-            Claims {areClaimsDisplayed ? "ᐯ" : "ᐱ"}
-          </Button>
-        </div>
+        <Button variant="primary" onClick={handleSaveChanges}>
+          Save
+        </Button>
+        <Button variant="info" onClick={toggleClaims}>
+          Claims {areClaimsDisplayed ? "ᐯ" : "ᐱ"}
+        </Button>
+        {areClaimsDisplayed && (
+          <ListGroup as="ul">
+            {userClaims.map((claim, index) => (
+              <ListGroup.Item as="li" key={index}>
+                <span>ResourceId: {claim.resourceId}</span>
+                <Button
+                  variant="primary"
+                  onClick={() => deleteClaimOnIndex(index)}
+                >
+                  Delete
+                </Button>
+              </ListGroup.Item>
+            ))}
+            <ListGroup.Item as="li">
+              <Form.Group>
+                <Form.Label>Claim new</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter new claim name"
+                  value={newClaim}
+                  minLength="3"
+                  onChange={({ target: { value } }) => setNewClaim(value)}
+                />
+                <Button variant="primary" onClick={addNewClaim}>
+                  Add
+                </Button>
+              </Form.Group>
+            </ListGroup.Item>
+          </ListGroup>
+        )}
       </CardStyled>
     </>
   );
