@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Card, Form, Button } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 
-import { editUserSecurityProfile } from '../../services/common';
+import { editUserSecurityProfile } from "../../services/common";
+import { CardStyled, CardHeaderStyled } from "../index.styled";
 
 const UserCard = ({ user, securityProfiles, setFilteredSecurityProfile }) => {
   const [selectedSecurityProfile, setSelectedSecurityProfile] = useState(
@@ -10,10 +11,11 @@ const UserCard = ({ user, securityProfiles, setFilteredSecurityProfile }) => {
   const [areClaimsDisplayed, setAreClaimsDisplayed] = useState(false);
 
   const handleSaveChanges = () => {
-    const userNewSecurityProfile = securityProfiles.find(sp => sp.securityProfileId === Number(selectedSecurityProfile));
-    editUserSecurityProfile(user, userNewSecurityProfile)
-    .then(() => {
-      setFilteredSecurityProfile(user.securityProfile.securityProfileId)
+    const userNewSecurityProfile = securityProfiles.find(
+      sp => sp.securityProfileId === Number(selectedSecurityProfile)
+    );
+    editUserSecurityProfile(user, userNewSecurityProfile).then(() => {
+      setFilteredSecurityProfile(user.securityProfile.securityProfileId);
     });
   };
 
@@ -23,8 +25,21 @@ const UserCard = ({ user, securityProfiles, setFilteredSecurityProfile }) => {
 
   return (
     <>
-      <Card>
-        <Card.Header>{user.email}</Card.Header>
+      <CardStyled>
+        <CardHeaderStyled>
+          <div>
+            <h2>Email:</h2>
+            <h2>{user.email}</h2>
+          </div>
+          <div>
+            <h2>First name:</h2>
+            <h2>{user.firstName}</h2>
+          </div>
+          <div>
+            <h2>Last name:</h2>
+            <h2>{user.lastName}</h2>
+          </div>
+        </CardHeaderStyled>
         <Form>
           <Form.Label>Security profile</Form.Label>
           <Form.Control
@@ -41,13 +56,15 @@ const UserCard = ({ user, securityProfiles, setFilteredSecurityProfile }) => {
             ))}
           </Form.Control>
         </Form>
-        <Button variant="primary" onClick={handleSaveChanges}>
-          Save
-        </Button>
-        <Button variant="info" onClick={toggleClaims}>
-          Claims {areClaimsDisplayed ? "ᐯ" : "ᐱ"}
-        </Button>
-      </Card>
+        <div>
+          <Button variant="primary" onClick={handleSaveChanges}>
+            Save
+          </Button>
+          <Button variant="info" onClick={toggleClaims}>
+            Claims {areClaimsDisplayed ? "ᐯ" : "ᐱ"}
+          </Button>
+        </div>
+      </CardStyled>
     </>
   );
 };

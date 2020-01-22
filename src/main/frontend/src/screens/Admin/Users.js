@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Accordion } from "react-bootstrap";
-import { getAllSecurityProfiles, getAllUsersBySecurityProfileId } from "../../services/common";
-import { ScreenContainer } from "../index.styled";
+import {
+  getAllSecurityProfiles,
+  getAllUsersBySecurityProfileId
+} from "../../services/common";
+import { ScreenContainer, UsersWrapper } from "../index.styled";
 import { Form } from "react-bootstrap";
 
 import UserCard from "./UserCard";
@@ -14,20 +16,18 @@ const Users = () => {
   useEffect(() => {
     getAllSecurityProfiles().then(({ data }) => {
       setSecurityProfiles(data);
-      const securityProfile = data.find(
-        sp => sp.name === "UserNotOwner"
-      );
+      const securityProfile = data.find(sp => sp.name === "UserNotOwner");
       refreshUsersBySecurityProfileId(securityProfile.securityProfileId);
-      _setFilteredSecurityProfile(securityProfile.securityProfileId)
+      _setFilteredSecurityProfile(securityProfile.securityProfileId);
     });
   }, []);
 
   const refreshUsersBySecurityProfileId = id => {
     getAllUsersBySecurityProfileId(id).then(({ data }) => {
       setUsers(data);
-    })
-  }
-  
+    });
+  };
+
   const setFilteredSecurityProfile = id => {
     _setFilteredSecurityProfile(id);
     refreshUsersBySecurityProfileId(id);
@@ -51,7 +51,7 @@ const Users = () => {
           ))}
         </Form.Control>
       </Form>
-      <Accordion>
+      <UsersWrapper>
         {users.map((user, index) => (
           <UserCard
             key={index}
@@ -60,7 +60,7 @@ const Users = () => {
             setFilteredSecurityProfile={setFilteredSecurityProfile}
           />
         ))}
-      </Accordion>
+      </UsersWrapper>
     </ScreenContainer>
   );
 };
