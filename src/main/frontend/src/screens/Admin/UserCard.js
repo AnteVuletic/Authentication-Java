@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 import { Card, Form, Button } from "react-bootstrap";
 
-const UserCard = ({ user, securityProfiles }) => {
+import { editUserSecurityProfile } from '../../services/common';
+
+const UserCard = ({ user, securityProfiles, setFilteredSecurityProfile }) => {
   const [selectedSecurityProfile, setSelectedSecurityProfile] = useState(
     user.securityProfile.securityProfileId
   );
   const [areClaimsDisplayed, setAreClaimsDisplayed] = useState(false);
 
   const handleSaveChanges = () => {
-    console.log(selectedSecurityProfile);
+    const userNewSecurityProfile = securityProfiles.find(sp => sp.securityProfileId === Number(selectedSecurityProfile));
+    editUserSecurityProfile(user, userNewSecurityProfile)
+    .then(() => {
+      setFilteredSecurityProfile(user.securityProfile.securityProfileId)
+    });
   };
 
   const toggleClaims = () => {

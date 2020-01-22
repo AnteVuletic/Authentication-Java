@@ -1,5 +1,6 @@
 package org.authentication.controllers;
 
+import org.authentication.datatransferobjects.UserNewProfile;
 import org.authentication.domain.SecurityProfile;
 import org.authentication.domain.User;
 import org.authentication.services.SecurityProfileService;
@@ -30,8 +31,8 @@ public class SecurityProfileController {
     }
 
     @RequestMapping(value = "/edit-user", method = RequestMethod.POST)
-    public ResponseEntity<?> editUser(@RequestBody User user, @RequestBody SecurityProfile securityProfile) {
-        this.securityProfileService.editUserSecurityProfile(user, securityProfile);
+    public ResponseEntity<?> editUser(@RequestBody UserNewProfile userNewProfile) {
+        this.securityProfileService.editUserSecurityProfile(userNewProfile.user, userNewProfile.securityProfile);
         return ResponseEntity.ok("User edited");
     }
 

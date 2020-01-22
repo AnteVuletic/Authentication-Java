@@ -17,16 +17,21 @@ const Users = () => {
       const securityProfile = data.find(
         sp => sp.name === "UserNotOwner"
       );
-      setFilteredSecurityProfile(securityProfile.securityProfileId);
+      refreshUsersBySecurityProfileId(securityProfile.securityProfileId);
+      _setFilteredSecurityProfile(securityProfile.securityProfileId)
     });
   }, []);
 
-  const setFilteredSecurityProfile = id => {
-    _setFilteredSecurityProfile(id);
+  const refreshUsersBySecurityProfileId = id => {
     getAllUsersBySecurityProfileId(id).then(({ data }) => {
       setUsers(data);
     })
   }
+  
+  const setFilteredSecurityProfile = id => {
+    _setFilteredSecurityProfile(id);
+    refreshUsersBySecurityProfileId(id);
+  };
 
   return (
     <ScreenContainer>
@@ -52,6 +57,7 @@ const Users = () => {
             key={index}
             user={user}
             securityProfiles={securityProfiles}
+            setFilteredSecurityProfile={setFilteredSecurityProfile}
           />
         ))}
       </Accordion>

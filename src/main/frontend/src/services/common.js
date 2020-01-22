@@ -61,8 +61,8 @@ export const getAllUsersBySecurityProfileId = id => {
 // securityProfile: { securityProfileId, name }
 export const editUserSecurityProfile = (user, securityProfile) => {
   return axios.post(securityProfileEndpoints.editUser, {
-    user,
-    securityProfile
+    user: { ...user },
+    securityProfile: {...securityProfile}
   });
 };
 
