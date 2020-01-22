@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Nav, Card, Accordion } from "react-bootstrap";
+import { Nav, Card, Accordion, ListGroup } from "react-bootstrap";
 
 export const ScreenContainer = styled.div`
   display: flex;
@@ -59,5 +59,27 @@ export const UsersWrapper = styled(Accordion)`
     justify-content: flex-end;
     align-items: space-between;
     width: 10%;
+  }
+`;
+
+export const ListItem = styled(ListGroup.Item)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  & > div {
+    width: 30%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  & > div > h4 {
+    font-size: 26px;
+  }
+
+  & > div > h4:last-child {
+    font-weight: 400;
+    margin-left: 12px;
   }
 `;
