@@ -25,7 +25,7 @@ public class SecurityProfileController {
 
     @RequestMapping(value = "/get", method = RequestMethod.GET)
     public ResponseEntity<ArrayList<User>> getUsersBySecurityProfileId(@RequestParam(name = "id") String id) {
-        ArrayList<User> users = this.securityProfileService.getAllUsersBySecurityProfile(Integer.getInteger(id));
+        ArrayList<User> users = this.securityProfileService.getAllUsersBySecurityProfile(Integer.parseInt(id));
         return ResponseEntity.ok(users);
     }
 
