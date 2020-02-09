@@ -62,7 +62,7 @@ export const getAllUsersBySecurityProfileId = id => {
 export const editUserSecurityProfile = (user, securityProfile) => {
   return axios.post(securityProfileEndpoints.editUser, {
     user: { ...user },
-    securityProfile: {...securityProfile}
+    securityProfile: { ...securityProfile }
   });
 };
 
@@ -82,4 +82,12 @@ export const deleteClaim = claim => {
 
 export const getAllUserClaims = ({ userId }) => {
   return axios.get(claimEndpoints.get + `?id=${userId}`);
+};
+
+export const getAllClaims = () => {
+  return [
+    { claimId: 2, name: "testClaim", description: "claim description" },
+    { claimId: 6, name: "testClaim6", description: "claim description" },
+    { claimId: 7, name: "testClaim7", description: "claim description" }
+  ];
 };

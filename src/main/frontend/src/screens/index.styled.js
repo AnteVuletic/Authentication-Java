@@ -83,3 +83,27 @@ export const ListItem = styled(ListGroup.Item)`
     margin-left: 12px;
   }
 `;
+
+export const ModalContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #00000088;
+  width: 100vw;
+  height: 100vh;
+  overflow: none;
+`;
+
+export const ClaimSpacer = styled.li`
+  list-style: none;
+  font-weight: bold;
+  font-size: 22px;
+`;
+
+export const ClaimItem = styled.li`
+  display: flex;
+
+  & > button {
+    margin-right: 16px;
+  }
+`;

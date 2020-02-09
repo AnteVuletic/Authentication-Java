@@ -1,139 +1,137 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Form, Button, ListGroup } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
 
-import {
-  editUserSecurityProfile,
-  getAllUserClaims,
-  addClaim,
-  deleteClaim
-} from "../../services/common";
-import { CardStyled, CardHeaderStyled, ListItem } from "../index.styled";
+import { getAllUserClaims, getAllClaims } from "../../services/common";
 
-const UserCard = ({ user, securityProfiles, setFilteredSecurityProfile }) => {
-  const [selectedSecurityProfile, setSelectedSecurityProfile] = useState(
-    user.securityProfile.securityProfileId
+import { Modal, Button } from "react-bootstrap";
+
+import { ModalContainer, ClaimSpacer, ClaimItem } from "../index.styled";
+
+const UserModal = ({ user, userClaims, handleClose }) => {
+  const [newClaims, setNewClaims] = useState(userClaims);
+  const [availableClaims, setAvailableClaims] = useState([]);
+
+  useEffect(() => {
+    const allClaims = getAllClaims(); //TODO Edit
+
+    const available = allClaims.filter(
+      claim => !newClaims.some(c => c.claimId === claim.claimId)
+    );
+
+    setAvailableClaims(available);
+  }, [newClaims]);
+
+  const addClaim = e => {
+    const newClaimId = +e.target.value;
+
+    if (newClaimId === "none") {
+      return;
+    }
+
+    const claimToAdd = availableClaims.find(
+      claim => claim.claimId === newClaimId
+    );
+
+    setNewClaims(prev => {
+      return [...prev, claimToAdd];
+    });
+  };
+
+  const removeClaim = claimId => {
+    setNewClaims(prev => prev.filter(claim => claim.claimId !== claimId));
+  };
+
+  const updateUserClaims = () => {
+    console.log("update", user.email);
+    console.log(newClaims);
+  };
+
+  return (
+    <ModalContainer>
+      <Modal.Dialog>
+        <Modal.Header>
+          <Modal.Title>{user.email}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <ul>
+            <ClaimSpacer>Claims</ClaimSpacer>
+            {newClaims.map((claim, index) => (
+              <ClaimItem key={index}>
+                <Button
+                  variant="danger"
+                  onClick={() => removeClaim(claim.claimId)}
+                >
+                  X
+                </Button>
+                <p>{claim.name}</p>
+              </ClaimItem>
+            ))}
+            <select onChange={addClaim}>
+              <option value="none" selected>
+                Add claim
+              </option>
+              {availableClaims.map(claim => (
+                <option key={claim.claimId} value={claim.claimId}>
+                  {claim.name}
+                </option>
+              ))}
+            </select>
+          </ul>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button onClick={handleClose} variant="secondary">
+            Close
+          </Button>
+          <Button variant="primary" onClick={updateUserClaims}>
+            Save changes
+          </Button>
+        </Modal.Footer>
+      </Modal.Dialog>
+    </ModalContainer>
   );
+};
+
+const UserCard = ({ user }) => {
   const [areClaimsDisplayed, setAreClaimsDisplayed] = useState(false);
   const [userClaims, setUserClaims] = useState([]);
-  const [newClaim, setNewClaim] = useState("");
 
-  const refreshUserClaims = useCallback(() => {
+  // const refreshUserClaims = useCallback(() => {
+  //   getAllUserClaims({ userId: user.userId }).then(({ data }) =>
+  //     setUserClaims(data)
+  //   );
+  // }, [user.userId]);
+
+  useEffect(() => {
     getAllUserClaims({ userId: user.userId }).then(({ data }) =>
       setUserClaims(data)
     );
   }, [user.userId]);
 
-  useEffect(() => {
-    refreshUserClaims();
-  }, [refreshUserClaims]);
-
-  const handleSaveChanges = () => {
-    const userNewSecurityProfile = securityProfiles.find(
-      sp => sp.securityProfileId === Number(selectedSecurityProfile)
-    );
-    editUserSecurityProfile(user, userNewSecurityProfile).then(() => {
-      setFilteredSecurityProfile(user.securityProfile.securityProfileId);
-    });
-  };
-
   const toggleClaims = () => {
     setAreClaimsDisplayed(!areClaimsDisplayed);
-    if (areClaimsDisplayed) {
-      refreshUserClaims();
-    }
-  };
-
-  const addNewClaim = () => {
-    if (newClaim.length !== 0) {
-      addClaim({ resourceId: newClaim }, user).then(() => {
-        setNewClaim("");
-        refreshUserClaims();
-      });
-    }
-  };
-
-  const deleteClaimOnIndex = index => {
-    const claimToDelete = userClaims[index];
-    deleteClaim(claimToDelete).then(() => {
-      refreshUserClaims();
-    });
   };
 
   return (
     <>
-      <CardStyled>
-        <CardHeaderStyled>
-          <div>
-            <h2>Email:</h2>
-            <h2>{user.email}</h2>
-          </div>
-          <div>
-            <h2>First name:</h2>
-            <h2>{user.firstName}</h2>
-          </div>
-          <div>
-            <h2>Last name:</h2>
-            <h2>{user.lastName}</h2>
-          </div>
-        </CardHeaderStyled>
-        <Form>
-          <Form.Label>Security profile</Form.Label>
-          <Form.Control
-            as="select"
-            value={selectedSecurityProfile}
-            onChange={e => {
-              setSelectedSecurityProfile(e.target.value);
-            }}
-          >
-            {securityProfiles.map((securityProfile, index) => (
-              <option key={index} value={securityProfile.securityProfileId}>
-                {securityProfile.name}
-              </option>
-            ))}
-          </Form.Control>
-        </Form>
-        <div>
-          <Button variant="primary" onClick={handleSaveChanges}>
-            Save
-          </Button>
-          <Button variant="info" onClick={toggleClaims}>
-            Claims {areClaimsDisplayed ? "ᐯ" : "ᐱ"}
-          </Button>
-        </div>
-      </CardStyled>
       {areClaimsDisplayed && (
-        <ListGroup as="ul">
-          <ListGroup.Item as="li">
-            <Form.Group>
-              <Form.Label>Claim new</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter new claim name"
-                value={newClaim}
-                minLength="3"
-                onChange={({ target: { value } }) => setNewClaim(value)}
-              />
-              <Button variant="primary" onClick={addNewClaim}>
-                Add
-              </Button>
-            </Form.Group>
-          </ListGroup.Item>
-          {userClaims.map((claim, index) => (
-            <ListItem key={index}>
-              <div>
-                <h4>ResourceId: </h4>
-                <h4>{claim.resourceId}</h4>
-              </div>
-              <Button
-                variant="primary"
-                onClick={() => deleteClaimOnIndex(index)}
-              >
-                Delete
-              </Button>
-            </ListItem>
-          ))}
-        </ListGroup>
+        <UserModal
+          user={user}
+          userClaims={userClaims}
+          handleClose={toggleClaims}
+        />
       )}
+      <tr>
+        <td>{user.email}</td>
+        <td>{user.firstName}</td>
+        <td>{user.lastName}</td>
+        <td>{user.securityProfile.name}</td>
+        <td>
+          <Button variant="secondary" onClick={toggleClaims}>
+            Claims
+          </Button>
+        </td>
+      </tr>
     </>
   );
 };
