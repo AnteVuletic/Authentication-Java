@@ -1,2 +1,2 @@
 alter table authentication.users
-alter column password type varchar(9000)
+alter column password type varchar(9000)V1_4__alter_password_column_type.sql

@@ -1,12 +1,11 @@
 package org.authentication.domain;
 
-import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class User {
     @Id
     @Column(name = "userid")
@@ -28,13 +27,12 @@ public class User {
     @Column(name = "lastname")
     public String lastName;
 
-    @Column(name = "isactive")
-    @Type(type = "org.hibernate.type.NumericBooleanType")
-    public boolean isActive;
-
     @ManyToOne
     @JoinColumn(name = "securityprofileid")
     public SecurityProfile securityProfile;
+
+    @ManyToMany
+    public Set<Claim> claims;
 
     public User(){}
 
@@ -76,14 +74,6 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
     }
 
     public SecurityProfile getSecurityProfile() {

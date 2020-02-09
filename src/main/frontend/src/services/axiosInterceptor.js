@@ -5,7 +5,7 @@ import { refreshToken } from "./common";
 export const configureAxios = () => {
   axios.defaults.headers.post["Content-Type"] = "application/json";
 
-  axios.interceptors.request.use(config => {
+    axios.interceptors.request.use(config => {
     const localStorageToken = localStorage.getItem("token");
     if (localStorageToken != null) {
       const token = localStorageToken;

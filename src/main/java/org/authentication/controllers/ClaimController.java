@@ -19,21 +19,9 @@ public class ClaimController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<?> add(@RequestBody AddClaimUser addClaimUser) {
-        this.claimService.addUserClaim(addClaimUser.claim, addClaimUser.user);
+    public ResponseEntity<?> add(@RequestBody Claim claim) {
+        this.claimService.addClaim(claim);
         return ResponseEntity.ok("Claim added");
-    }
-
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public ResponseEntity<?> delete(@RequestBody Claim claim) {
-        this.claimService.deleteUserClaim(claim);
-        return ResponseEntity.ok("Claim deleted");
-    }
-
-    @RequestMapping(value = "/check-has-claim")
-    public ResponseEntity<?> CheckHasClaim(@RequestBody Claim claim) {
-        boolean hasClaim = this.claimService.hasClaimByUserId(claim.resourceId, claim.user.userId);
-        return ResponseEntity.ok(hasClaim);
     }
 
     @RequestMapping(value = "get", method = RequestMethod.GET)
