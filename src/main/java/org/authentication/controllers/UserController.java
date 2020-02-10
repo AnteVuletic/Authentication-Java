@@ -1,6 +1,9 @@
 package org.authentication.controllers;
 
+import org.authentication.datatransferobjects.AddClaimUser;
 import org.authentication.datatransferobjects.TokenRole;
+import org.authentication.datatransferobjects.UserEditPassword;
+import org.authentication.datatransferobjects.UserFilter;
 import org.authentication.domain.SecurityProfile;
 import org.authentication.domain.User;
 import org.authentication.services.JWTService;
@@ -15,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -53,6 +57,32 @@ public class UserController {
         String token = this.jwtService.generateToken(userDb);
         TokenRole tokenRole = new TokenRole(token, userDb.securityProfile.name);
         return ResponseEntity.ok(tokenRole);
+    }
+
+    @RequestMapping(value = "/filter-user", method = RequestMethod.POST)
+    public ResponseEntity<?> filterUser(@RequestBody UserFilter userfilter) {
+        List<User> users = this.userService.findUserByContainingEmailFirstNameLastName(userfilter.email, userfilter.firstName, userfilter.lastName);
+        return ResponseEntity.ok(users);
+    }
+
+    @RequestMapping(value = "/edit-user", method = RequestMethod.POST)
+    public ResponseEntity<?> editUser(@RequestBody User user) {
+        this.userService.updateUserDetails(user.userId, user.email, user.firstName, user.lastName);
+        return ResponseEntity.ok("Ok!");
+    }
+
+    @RequestMapping(value = "/edit-user-claim", method = RequestMethod.POST)
+    public ResponseEntity<?> editUserClaim(@RequestBody AddClaimUser userAndClaims) {
+        this.userService.updateUserClaims(userAndClaims.user, userAndClaims.claims);
+
+        return ResponseEntity.ok("Ok!");
+    }
+
+    @RequestMapping(value = "/edit-password", method = RequestMethod.POST)
+    public ResponseEntity<?> editPassword(@RequestBody UserEditPassword userEditPassword){
+        this.userService.resetUserPassword(userEditPassword.userId, userEditPassword.oldPassword, userEditPassword.newPassword);
+
+        return ResponseEntity.ok("Ok!");
     }
 
     @RequestMapping(value = "/refresh-token", method = RequestMethod.GET)
