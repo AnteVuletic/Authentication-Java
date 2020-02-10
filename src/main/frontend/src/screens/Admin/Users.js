@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
   getAllSecurityProfiles,
-  getAllUsersBySecurityProfileId
+  getAllUsersBySecurityProfileId,
+  getFilteredUsers
 } from "../../services/common";
 import { ScreenContainer } from "../index.styled";
 import { Form, Table } from "react-bootstrap";
@@ -14,6 +15,9 @@ const Users = () => {
     "all"
   );
   const [securityProfiles, setSecurityProfiles] = useState([]);
+  const [filterEmail, setFilterEmail] = useState("");
+  const [filterFirstName, setFilterFirstName] = useState("");
+  const [filterLastName, setFilterLastName] = useState("");
 
   useEffect(() => {
     getAllSecurityProfiles().then(({ data }) => {
@@ -44,6 +48,10 @@ const Users = () => {
   };
 
   const refreshUsersBySecurityProfileId = id => {
+    setFilterEmail("");
+    setFilterFirstName("");
+    setFilterLastName("");
+
     id !== "all" &&
       getAllUsersBySecurityProfileId(id).then(({ data }) => {
         setUsers(data);
@@ -53,6 +61,16 @@ const Users = () => {
   const setFilteredSecurityProfile = id => {
     _setFilteredSecurityProfile(id);
     refreshUsersBySecurityProfileId(id);
+  };
+
+  const handleKeyPress = e => {
+    if (e.key === "Enter") {
+      getFilteredUsers({
+        email: filterEmail,
+        firstName: filterFirstName,
+        lastName: filterLastName
+      }).then(res => setUsers(res.data));
+    }
   };
 
   return (
@@ -69,8 +87,32 @@ const Users = () => {
         </thead>
         <tbody>
           <tr>
-            <td colSpan="3">
-              <input type="text" placeholder="search"></input>
+            <td>
+              <input
+                type="text"
+                placeholder="email"
+                onKeyPress={handleKeyPress}
+                value={filterEmail}
+                onChange={e => setFilterEmail(e.target.value)}
+              ></input>
+            </td>
+            <td>
+              <input
+                type="text"
+                placeholder="first name"
+                onKeyPress={handleKeyPress}
+                value={filterFirstName}
+                onChange={e => setFilterFirstName(e.target.value)}
+              ></input>
+            </td>
+            <td>
+              <input
+                type="text"
+                placeholder="last name"
+                onKeyPress={handleKeyPress}
+                value={filterLastName}
+                onChange={e => setFilterLastName(e.target.value)}
+              ></input>
             </td>
             <td>
               <Form.Control

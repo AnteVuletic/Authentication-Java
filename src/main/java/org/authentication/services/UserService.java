@@ -107,7 +107,7 @@ public class UserService implements UserDetailsService {
 
     public List<User> findUserByContainingEmailFirstNameLastName(String email, String firstName, String lastName) {
         List<User> users = this.userRepository.findAllByEmailContainsAndFirstNameContainsAndLastNameContains(email, firstName, lastName);
-        users.forEach(user -> {user.securityProfile.users = null;});
+        users.forEach(user -> {user.securityProfile.users = null; user.userClaims = null;});
         return users;
     }
 

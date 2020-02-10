@@ -10,7 +10,8 @@ const userEndpoints = {
   register: `${baseUser}/register`,
   authenticate: `${baseUser}/authenticate`,
   refreshToken: `${baseUser}/refresh-token`,
-  updateClaims: `${baseUser}/edit-user-claims`
+  updateClaims: `${baseUser}/edit-user-claims`,
+  getFiltered: `${baseUser}/filter-user`
 };
 
 const securityProfileEndpoints = {
@@ -91,4 +92,8 @@ export const getAllClaims = () => {
 
 export const updateUserClaims = (user, claims) => {
   return axios.post(userEndpoints.updateClaims, { user, claims });
+};
+
+export const getFilteredUsers = ({ firstName, lastName, email }) => {
+  return axios.post(userEndpoints.getFiltered, { firstName, lastName, email });
 };
