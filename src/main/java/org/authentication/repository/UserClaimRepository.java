@@ -9,4 +9,5 @@ import java.util.List;
 public interface UserClaimRepository extends CrudRepository<UserClaim, Integer> {
     List<UserClaim> findAllByUser_UserId(String userId);
     List<UserClaim> findAllByClaim_ClaimId(int claimId);
+    UserClaim findByUser_UserIdAndClaim_ClaimId(String userId, int claimId);
 }

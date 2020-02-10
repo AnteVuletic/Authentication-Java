@@ -71,8 +71,8 @@ public class UserController {
         return ResponseEntity.ok("Ok!");
     }
 
-    @RequestMapping(value = "/edit-user-claim", method = RequestMethod.POST)
-    public ResponseEntity<?> editUserClaim(@RequestBody AddClaimUser userAndClaims) {
+    @RequestMapping(value = "/edit-user-claims", method = RequestMethod.POST)
+    public ResponseEntity<?> editUserClaims(@RequestBody AddClaimUser userAndClaims) {
         this.userService.updateUserClaims(userAndClaims.user, userAndClaims.claims);
 
         return ResponseEntity.ok("Ok!");

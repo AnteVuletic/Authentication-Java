@@ -1,23 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
-import { getAllUserClaims, getAllClaims } from "../../services/common";
+import {
+  getAllUserClaims,
+  getAllClaims,
+  updateUserClaims
+} from "../../services/common";
 
 import { Modal, Button } from "react-bootstrap";
 
 import { ModalContainer, ClaimSpacer, ClaimItem } from "../index.styled";
 
-const UserModal = ({ user, userClaims, handleClose }) => {
+const UserModal = ({ user, userClaims, handleClose, hasSaved }) => {
   const [newClaims, setNewClaims] = useState(userClaims);
   const [availableClaims, setAvailableClaims] = useState([]);
 
   useEffect(() => {
-    const allClaims = getAllClaims(); //TODO Edit
+    getAllClaims().then(res => {
+      const allClaims = res.data;
+      const available = allClaims.filter(
+        claim => !newClaims.some(c => c.claimId === claim.claimId)
+      );
 
-    const available = allClaims.filter(
-      claim => !newClaims.some(c => c.claimId === claim.claimId)
-    );
-
-    setAvailableClaims(available);
+      setAvailableClaims(available);
+    });
   }, [newClaims]);
 
   const addClaim = e => {
@@ -40,9 +45,10 @@ const UserModal = ({ user, userClaims, handleClose }) => {
     setNewClaims(prev => prev.filter(claim => claim.claimId !== claimId));
   };
 
-  const updateUserClaims = () => {
-    console.log("update", user.email);
-    console.log(newClaims);
+  const handleUpdateUserClaims = () => {
+    updateUserClaims(user, newClaims);
+    handleClose();
+    window.location.reload();
   };
 
   return (
@@ -83,7 +89,7 @@ const UserModal = ({ user, userClaims, handleClose }) => {
           <Button onClick={handleClose} variant="secondary">
             Close
           </Button>
-          <Button variant="primary" onClick={updateUserClaims}>
+          <Button variant="primary" onClick={handleUpdateUserClaims}>
             Save changes
           </Button>
         </Modal.Footer>
@@ -96,17 +102,15 @@ const UserCard = ({ user }) => {
   const [areClaimsDisplayed, setAreClaimsDisplayed] = useState(false);
   const [userClaims, setUserClaims] = useState([]);
 
-  // const refreshUserClaims = useCallback(() => {
-  //   getAllUserClaims({ userId: user.userId }).then(({ data }) =>
-  //     setUserClaims(data)
-  //   );
-  // }, [user.userId]);
+  const refetch = useCallback(() => {
+    getAllUserClaims({ userId: user.userId }).then(({ data }) => {
+      setUserClaims(data);
+    });
+  }, [user.userId]);
 
   useEffect(() => {
-    getAllUserClaims({ userId: user.userId }).then(({ data }) =>
-      setUserClaims(data)
-    );
-  }, [user.userId]);
+    refetch();
+  }, [refetch]);
 
   const toggleClaims = () => {
     setAreClaimsDisplayed(!areClaimsDisplayed);
@@ -119,6 +123,7 @@ const UserCard = ({ user }) => {
           user={user}
           userClaims={userClaims}
           handleClose={toggleClaims}
+          hasSaved={refetch}
         />
       )}
       <tr>

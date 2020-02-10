@@ -1,5 +1,6 @@
 package org.authentication.controllers;
 
+import org.apache.coyote.Response;
 import org.authentication.domain.Claim;
 import org.authentication.domain.User;
 import org.authentication.services.ClaimService;
@@ -36,5 +37,11 @@ public class ClaimController {
     public ResponseEntity<?> GetAllUsersByClaimId(@RequestParam int claimId) {
         List<User> users = this.userService.getAllUsersByClaimId(claimId);
         return ResponseEntity.ok(users);
+    }
+
+    @RequestMapping(value = "get-by-user", method = RequestMethod.GET)
+    public ResponseEntity<?> GetAllClaimsByUser(@RequestParam String userId) {
+        List<Claim> claims = this.claimService.getClaimsByUser(userId);
+        return ResponseEntity.ok(claims);
     }
 }

@@ -37,12 +37,16 @@ public class SecurityProfileService {
 
     public ArrayList<User> getAllUsersBySecurityProfile(int securityProfileId) {
         if (!this.validateLoggedInUserIsSuperAdmin()) throw new AuthorizationServiceException("User not super admin");
-        return this.userRepository.getAllBySecurityProfile_SecurityProfileId(securityProfileId);
+        ArrayList<User> users = this.userRepository.getAllBySecurityProfile_SecurityProfileId(securityProfileId);
+        users.forEach(user -> {user.securityProfile.users = null; user.userClaims = null; user.password = null;});
+        return users;
     }
 
     public ArrayList<SecurityProfile> getAllSecurityProfiles() {
         if (!this.validateLoggedInUserIsSuperAdmin()) throw new AuthorizationServiceException("User not super admin");
-        return (ArrayList<SecurityProfile>) this.securityProfileRepository.findAll();
+        ArrayList<SecurityProfile> securityProfiles = (ArrayList<SecurityProfile>) this.securityProfileRepository.findAll();
+        securityProfiles.forEach(securityProfile -> {securityProfile.users = null;});
+        return securityProfiles;
     }
 
     public void editUserSecurityProfile(User user, SecurityProfile securityProfile) {

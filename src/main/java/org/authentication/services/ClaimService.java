@@ -41,7 +41,9 @@ public class ClaimService {
     }
 
     public List<Claim> getAllClaims() {
-        return (List<Claim>) this.claimRepository.findAll();
+        List<Claim> allClaims = (List<Claim>) this.claimRepository.findAll();
+        allClaims.forEach(claim -> {claim.claims = null;});
+        return allClaims;
     }
 
     public Map<String, Object> getClaims(User user) {
@@ -51,6 +53,18 @@ public class ClaimService {
             map.put(userClaim.claim.name, userClaim.claim.claimId);
         });
         return map;
+    }
+
+    public List<Claim> getClaimsByUser(String userId) {
+        ArrayList<UserClaim> userClaims = (ArrayList<UserClaim>) this.userClaimRepository.findAllByUser_UserId(userId);
+        List<Claim> claims = new ArrayList<Claim>();
+        userClaims.forEach(userClaim -> {
+            userClaim.user.userClaims = null;
+            userClaim.user.securityProfile = null;
+            userClaim.claim.claims = null;
+            claims.add(userClaim.claim);
+        });
+        return claims;
     }
 
     public void addClaim(Claim claim) {

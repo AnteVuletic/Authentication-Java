@@ -90,12 +90,7 @@ const Users = () => {
             </td>
           </tr>
           {users.map((user, index) => (
-            <UserCard
-              key={index}
-              user={user}
-              securityProfiles={securityProfiles}
-              setFilteredSecurityProfile={setFilteredSecurityProfile}
-            />
+            <UserCard key={index} user={user} />
           ))}
         </tbody>
       </Table>

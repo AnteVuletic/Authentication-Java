@@ -9,7 +9,8 @@ const claimBase = `${base}/claim`;
 const userEndpoints = {
   register: `${baseUser}/register`,
   authenticate: `${baseUser}/authenticate`,
-  refreshToken: `${baseUser}/refresh-token`
+  refreshToken: `${baseUser}/refresh-token`,
+  updateClaims: `${baseUser}/edit-user-claims`
 };
 
 const securityProfileEndpoints = {
@@ -81,13 +82,13 @@ export const deleteClaim = claim => {
 };
 
 export const getAllUserClaims = ({ userId }) => {
-  return axios.get(claimEndpoints.get + `?id=${userId}`);
+  return axios.get(claimEndpoints.get + `-by-user?userId=${userId}`);
 };
 
 export const getAllClaims = () => {
-  return [
-    { claimId: 2, name: "testClaim", description: "claim description" },
-    { claimId: 6, name: "testClaim6", description: "claim description" },
-    { claimId: 7, name: "testClaim7", description: "claim description" }
-  ];
+  return axios.get(claimEndpoints.get);
+};
+
+export const updateUserClaims = (user, claims) => {
+  return axios.post(userEndpoints.updateClaims, { user, claims });
 };

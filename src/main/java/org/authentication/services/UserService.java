@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 @Component
@@ -73,12 +74,16 @@ public class UserService implements UserDetailsService {
 
     public void updateUserClaims(User user, List<Claim> claims) {
         if (!this.securityProfileService.validateLoggedInUserIsSuperAdmin()) throw new AuthorizationServiceException("User not super admin");
-        ArrayList<UserClaim> userClaims = new ArrayList<UserClaim>();
-        claims.forEach(claim -> {
-            userClaims.add(new UserClaim(claim, user));
+        List<UserClaim> currentClaims = this.userClaimRepository.findAllByUser_UserId(user.userId);
+        User userToEdit = this.userRepository.findByEmail(user.email);
+
+        currentClaims.forEach(userClaim -> {
+            this.userClaimRepository.delete(userClaim);
         });
-        user.userClaims = userClaims;
-        this.userRepository.save(user);
+
+        claims.forEach(claim -> {
+            this.userClaimRepository.save(new UserClaim(claim, userToEdit));
+        });
     }
 
     public List<User> getAllUsersByClaimId(int claimId) {
@@ -89,15 +94,21 @@ public class UserService implements UserDetailsService {
             users.add(userClaim.user);
         });
 
+        users.forEach(user -> {user.securityProfile.users = null;});
+
         return users;
     }
 
     public User findUserByEmail(String email) {
-        return this.userRepository.findByEmail(email);
+        User user = this.userRepository.findByEmail(email);
+        user.securityProfile.users = null;
+        return user;
     }
 
     public List<User> findUserByContainingEmailFirstNameLastName(String email, String firstName, String lastName) {
-        return this.userRepository.findAllByEmailContainsAndFirstNameContainsAndLastNameContains(email, firstName, lastName);
+        List<User> users = this.userRepository.findAllByEmailContainsAndFirstNameContainsAndLastNameContains(email, firstName, lastName);
+        users.forEach(user -> {user.securityProfile.users = null;});
+        return users;
     }
 
     @Override
@@ -107,6 +118,8 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(s);
         }
+
+        user.securityProfile.users = null;
 
         return new org.springframework.security.core.userdetails.User(user.email, user.password, Collections.emptyList());
     }
