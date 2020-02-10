@@ -2,7 +2,7 @@ package org.authentication.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -31,10 +31,8 @@ public class User {
     @JoinColumn(name = "securityprofileid")
     public SecurityProfile securityProfile;
 
-    @ManyToMany
-    public Set<Claim> claims;
-
-    public User(){}
+    @OneToMany(mappedBy="user")
+    public List<UserClaim> userClaims;
 
     public String getUserId() {
         return userId;
@@ -82,5 +80,13 @@ public class User {
 
     public void setSecurityProfile(SecurityProfile securityProfile) {
         this.securityProfile = securityProfile;
+    }
+
+    public List<UserClaim> getUserClaims() {
+        return userClaims;
+    }
+
+    public void setUserClaims(List<UserClaim> userClaims) {
+        this.userClaims = userClaims;
     }
 }

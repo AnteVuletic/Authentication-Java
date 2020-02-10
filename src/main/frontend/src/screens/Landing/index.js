@@ -16,7 +16,7 @@ const Landing = () => {
               <Link to="./login">Login</Link>
             </NavItem>
             <NavItem>
-              <Link to="./register">Register</Link>
+              <Link to="./register" style={{marginLeft: '10px'}}>Register</Link>
             </NavItem>
           </>
         )}

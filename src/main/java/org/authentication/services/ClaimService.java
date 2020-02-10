@@ -2,44 +2,53 @@ package org.authentication.services;
 
 import org.authentication.domain.Claim;
 import org.authentication.domain.User;
+import org.authentication.domain.UserClaim;
 import org.authentication.repository.ClaimRepository;
 import org.authentication.repository.UserClaimRepository;
 import org.authentication.repository.UserRepository;
 import org.springframework.security.access.AuthorizationServiceException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class ClaimService {
     private final UserClaimRepository userClaimRepository;
     private final SecurityProfileService securityProfileService;
     private final ClaimRepository claimRepository;
+    private final UserRepository userRepository;
 
     public ClaimService(
             UserClaimRepository userClaimRepository,
             SecurityProfileService securityProfileService,
-            ClaimRepository claimRepository
+            ClaimRepository claimRepository,
+            UserRepository userRepository
     ) {
         this.userClaimRepository = userClaimRepository;
         this.securityProfileService = securityProfileService;
         this.claimRepository = claimRepository;
+        this.userRepository = userRepository;
     }
 
-    public ArrayList<Claim> getClaimByUser(String userId) {
-        return this.claimRepository.getAllByUser_UserId(userId);
+    public List<Claim> getClaimByUser(String userId) {
+        Optional<User> user = this.userRepository.findById(userId);
+        ArrayList<Claim> claims = new ArrayList<>();
+        user.get().getUserClaims().forEach(userClaim -> {
+            claims.add(userClaim.claim);
+        });
+
+        return claims;
+    }
+
+    public List<Claim> getAllClaims() {
+        return (List<Claim>) this.claimRepository.findAll();
     }
 
     public Map<String, Object> getClaims(User user) {
-        ArrayList<Claim> claims = this.claimRepository.getAllByUser_UserId(user.userId);
+        ArrayList<UserClaim> userClaims = (ArrayList<UserClaim>) this.userClaimRepository.findAllByUser_UserId(user.userId);
         Map<String, Object> map = new HashMap<>();
-        claims.forEach(claim -> {
-            map.put("name", claim.name);
+        userClaims.forEach(userClaim -> {
+            map.put(userClaim.claim.name, userClaim.claim.claimId);
         });
         return map;
     }

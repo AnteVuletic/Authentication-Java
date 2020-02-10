@@ -1,9 +1,8 @@
 package org.authentication.domain;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "claims")
@@ -18,10 +17,11 @@ public class Claim {
     public String name;
 
     @Size(min = 1, max = 150)
+    @Column(name = "description")
     public String description;
 
-    @ManyToMany
-    public Set<User> users;
+    @OneToMany(mappedBy="claim")
+    public List<UserClaim> claims;
 
     public Claim() {}
 
