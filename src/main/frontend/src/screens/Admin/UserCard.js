@@ -10,13 +10,13 @@ import { Modal, Button } from "react-bootstrap";
 
 import { ModalContainer, ClaimSpacer, ClaimItem } from "../index.styled";
 
-const UserModal = ({ user, userClaims, handleClose, hasSaved }) => {
+const UserModal = ({ user, userClaims, handleClose }) => {
   const [newClaims, setNewClaims] = useState(userClaims);
   const [availableClaims, setAvailableClaims] = useState([]);
 
   useEffect(() => {
-    getAllClaims().then(res => {
-      const allClaims = res.data;
+    getAllClaims().then(({ data }) => {
+      const allClaims = data;
       const available = allClaims.filter(
         claim => !newClaims.some(c => c.claimId === claim.claimId)
       );
@@ -133,7 +133,7 @@ const UserCard = ({ user }) => {
         <td>{user.securityProfile.name}</td>
         <td>
           <Button variant="secondary" onClick={toggleClaims}>
-            Claims
+            view/edit
           </Button>
         </td>
       </tr>

@@ -5,13 +5,15 @@ const base = "http://localhost:8080/api";
 const baseUser = `${base}/user`;
 const securityProfileBase = `${base}/security-profile`;
 const claimBase = `${base}/claim`;
+const userClaimBase = `${base}/user-claim`;
 
 const userEndpoints = {
   register: `${baseUser}/register`,
   authenticate: `${baseUser}/authenticate`,
   refreshToken: `${baseUser}/refresh-token`,
   updateClaims: `${baseUser}/edit-user-claims`,
-  getFiltered: `${baseUser}/filter-user`
+  getFiltered: `${baseUser}/filter-user`,
+  getByClaimId: `${baseUser}/get-by-claim`
 };
 
 const securityProfileEndpoints = {
@@ -22,9 +24,14 @@ const securityProfileEndpoints = {
 };
 
 const claimEndpoints = {
-  add: `${claimBase}/add`,
+  add: `${claimBase}/create`,
   delete: `${claimBase}/delete`,
   get: `${claimBase}/get`
+};
+
+const userClaimEndpoints = {
+  add: `${userClaimBase}/add`,
+  delete: `${userClaimBase}/delete`
 };
 
 export const register = ({
@@ -74,8 +81,8 @@ export const addSecurityProfile = securityProfile => {
 };
 
 // { claim: { resourceId }, user }
-export const addClaim = (claim, user) => {
-  return axios.post(claimEndpoints.add, { claim, user });
+export const addClaim = ({ name, description }) => {
+  return axios.post(claimEndpoints.add, { name, description });
 };
 
 export const deleteClaim = claim => {
@@ -96,4 +103,16 @@ export const updateUserClaims = (user, claims) => {
 
 export const getFilteredUsers = ({ firstName, lastName, email }) => {
   return axios.post(userEndpoints.getFiltered, { firstName, lastName, email });
+};
+
+export const getUsersByClaimId = claimId => {
+  return axios.post(userEndpoints.getByClaimId, { claimId });
+};
+
+export const addUserClaim = ({ claim, user }) => {
+  return axios.post(userClaimEndpoints.add, { claim, user });
+};
+
+export const deleteUserClaim = ({ claim, user }) => {
+  return axios.post(userClaimEndpoints.delete, { claim, user });
 };

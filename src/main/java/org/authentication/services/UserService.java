@@ -94,7 +94,7 @@ public class UserService implements UserDetailsService {
             users.add(userClaim.user);
         });
 
-        users.forEach(user -> {user.securityProfile.users = null;});
+        users.forEach(user -> {user.securityProfile.users = null; user.userClaims = null;});
 
         return users;
     }

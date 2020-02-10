@@ -6,6 +6,7 @@ import { NavItem } from "../index.styled";
 import { signout } from "../../utils/signout";
 import Users from "./Users";
 import Profiles from "./Profiles";
+import Claims from "./Claims";
 
 const AdminScene = ({ children, screenOnly }) => {
   const currentRoute = window.location.href;
@@ -30,6 +31,9 @@ const AdminNavbar = () => {
       </NavItem>
       <NavItem>
         <Link to="/admin/profiles">Profiles</Link>
+      </NavItem>
+      <NavItem>
+        <Link to="/admin/claims">Claims</Link>
       </NavItem>
       <NavItem onClick={signout}>
         <Button variant="primary">Sign out</Button>
@@ -59,6 +63,11 @@ const Admin = () => {
       <Route path="/admin/profiles">
         <AdminScene>
           <Profiles />
+        </AdminScene>
+      </Route>
+      <Route path="/admin/claims">
+        <AdminScene>
+          <Claims />
         </AdminScene>
       </Route>
       <Redirect to="/admin/users" />

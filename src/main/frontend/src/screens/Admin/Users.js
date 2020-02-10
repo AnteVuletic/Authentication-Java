@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import {
   getAllSecurityProfiles,
   getAllUsersBySecurityProfileId,
-  getFilteredUsers
+  getFilteredUsers,
+  getAllClaims,
+  getUsersByClaimId
 } from "../../services/common";
 import { ScreenContainer } from "../index.styled";
 import { Form, Table } from "react-bootstrap";
@@ -14,6 +16,8 @@ const Users = () => {
   const [filteredSecurityProfile, _setFilteredSecurityProfile] = useState(
     "all"
   );
+  const [selectedClaim, setSelectedClaim] = useState("all");
+  const [allClaims, setAllClaims] = useState([]);
   const [securityProfiles, setSecurityProfiles] = useState([]);
   const [filterEmail, setFilterEmail] = useState("");
   const [filterFirstName, setFilterFirstName] = useState("");
@@ -22,6 +26,12 @@ const Users = () => {
   useEffect(() => {
     getAllSecurityProfiles().then(({ data }) => {
       setSecurityProfiles(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    getAllClaims().then(({ data }) => {
+      setAllClaims(data);
     });
   }, []);
 
@@ -73,6 +83,23 @@ const Users = () => {
     }
   };
 
+  const handleChangeClaim = async e => {
+    const claimId = e.target.value;
+
+    if (claimId === "all") {
+      setSelectedClaim("all");
+      return getAllUsers();
+    }
+
+    const { data } = await getUsersByClaimId(+claimId);
+
+    setUsers(data);
+    setSelectedClaim(claimId);
+    setFilterEmail("");
+    setFilterFirstName("");
+    setFilterLastName("");
+  };
+
   return (
     <ScreenContainer>
       <Table striped bordered hover>
@@ -82,7 +109,7 @@ const Users = () => {
             <th>first name</th>
             <th>last name</th>
             <th>security profile</th>
-            <th>#</th>
+            <th>claims</th>
           </tr>
         </thead>
         <tbody>
@@ -126,6 +153,20 @@ const Users = () => {
                 {securityProfiles.map((securityProfile, index) => (
                   <option key={index} value={securityProfile.securityProfileId}>
                     {securityProfile.name}
+                  </option>
+                ))}
+              </Form.Control>
+            </td>
+            <td>
+              <Form.Control
+                as="select"
+                value={selectedClaim}
+                onChange={handleChangeClaim}
+              >
+                <option value="all">all claims</option>
+                {allClaims.map((claim, index) => (
+                  <option key={index} value={claim.claimId}>
+                    {claim.name}
                   </option>
                 ))}
               </Form.Control>

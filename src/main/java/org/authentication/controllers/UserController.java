@@ -4,6 +4,7 @@ import org.authentication.datatransferobjects.AddClaimUser;
 import org.authentication.datatransferobjects.TokenRole;
 import org.authentication.datatransferobjects.UserEditPassword;
 import org.authentication.datatransferobjects.UserFilter;
+import org.authentication.domain.Claim;
 import org.authentication.domain.SecurityProfile;
 import org.authentication.domain.User;
 import org.authentication.services.JWTService;
@@ -92,5 +93,11 @@ public class UserController {
         User user = this.userService.findUserByEmail(email);
         String tokenNew = this.jwtService.generateToken(user);
         return ResponseEntity.ok(tokenNew);
+    }
+
+    @RequestMapping(value = "/get-by-claim", method = RequestMethod.POST)
+    public ResponseEntity<?> filterUser(@RequestBody Claim claim) {
+        List<User> users = this.userService.getAllUsersByClaimId(claim.claimId);
+        return ResponseEntity.ok(users);
     }
 }
