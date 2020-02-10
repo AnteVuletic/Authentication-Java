@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Switch, Route, Redirect, Link } from "react-router-dom";
 import { Navbar, Button } from "react-bootstrap";
 import { NavItem } from "../index.styled";
-
 import { signout } from "../../utils/signout";
 import Users from "./Users";
 import Profiles from "./Profiles";

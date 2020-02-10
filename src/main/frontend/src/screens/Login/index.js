@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { authenticate } from "../../services/common";
-
 import { history } from "../../utils/BrowserHistoryWrapper";
 import { ScreenContainer } from "../index.styled";
 import { loginRegisterTest } from "../../utils/loginRegisterTest";

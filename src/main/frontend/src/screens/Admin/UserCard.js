@@ -57,7 +57,11 @@ const UserModal = ({ user, userClaims, handleClose, hasSaved }) => {
         <Modal.Header>
           <Modal.Title>{user.email}</Modal.Title>
         </Modal.Header>
-
+        <tbody>
+          <tr>
+            
+          </tr>
+        </tbody>
         <Modal.Body>
           <ul>
             <ClaimSpacer>Claims</ClaimSpacer>
@@ -102,10 +106,10 @@ const UserCard = ({ user }) => {
   const [areClaimsDisplayed, setAreClaimsDisplayed] = useState(false);
   const [userClaims, setUserClaims] = useState([]);
 
-  const refetch = useCallback(() => {
-    getAllUserClaims({ userId: user.userId }).then(({ data }) => {
-      setUserClaims(data);
-    });
+  const refreshUserClaims = useCallback(() => {
+    getAllUserClaims({ userId: user.userId }).then(({ data }) =>
+      setUserClaims(data)
+    );
   }, [user.userId]);
 
   useEffect(() => {

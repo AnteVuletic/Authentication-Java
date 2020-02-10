@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  getAllSecurityProfiles,
-  getAllUsersBySecurityProfileId
-} from "../../services/common";
+import { getAllSecurityProfiles, getAllUsersBySecurityProfileId } from "../../services/common";
 import { ScreenContainer } from "../index.styled";
 import { Form, Table } from "react-bootstrap";
 
@@ -31,7 +28,7 @@ const Users = () => {
     const { data } = await getAllSecurityProfiles();
 
     const allUsers = await Promise.all(
-      data.map(async securityProfile => {
+        data.map(async securityProfile => {
         const users = await getAllUsersBySecurityProfileId(
           securityProfile.securityProfileId
         );
@@ -81,11 +78,11 @@ const Users = () => {
                 }}
               >
                 <option value="all">all users</option>
-                {securityProfiles.map((securityProfile, index) => (
+                {/* {securityProfiles.map((securityProfile, index) => (
                   <option key={index} value={securityProfile.securityProfileId}>
                     {securityProfile.name}
                   </option>
-                ))}
+                ))} */}
               </Form.Control>
             </td>
           </tr>

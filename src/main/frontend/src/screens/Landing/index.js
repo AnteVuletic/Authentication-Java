@@ -16,14 +16,19 @@ const Landing = () => {
               <Link to="./login">Login</Link>
             </NavItem>
             <NavItem>
-              <Link to="./register" style={{marginLeft: '10px'}}>Register</Link>
+              <Link to="./register" style={{ marginLeft: '10px' }}>Register</Link>
             </NavItem>
           </>
         )}
         {shouldShowLoginOrRegister && (
-          <NavItem onClick={signout}>
-            <Button variant="primary">Sign out</Button>
-          </NavItem>
+          <>
+            <NavItem onClick={signout}>
+              <Button variant="primary">Sign out</Button>
+            </NavItem>
+            <NavItem >
+              <Link to="./profile" style={{ marginLeft: '10px' }}>Profile</Link>
+            </NavItem>
+          </>
         )}
       </Navbar>
     </div>

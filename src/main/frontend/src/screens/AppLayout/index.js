@@ -5,6 +5,7 @@ import Landing from "../Landing";
 import Login from "../Login";
 import Register from "../Register";
 import Admin from "../Admin";
+import Profile from "../Profile";
 
 const AppLayoutScene = ({ children, screenOnly }) => {
   const currentRoute = window.location.href;
@@ -37,6 +38,11 @@ const AppLayout = () => {
       <Route path="/register">
         <AppLayoutScene>
           <Register />
+        </AppLayoutScene>
+      </Route>
+      <Route path="/profile">
+        <AppLayoutScene>
+          <Profile />
         </AppLayoutScene>
       </Route>
     </Switch>

@@ -10,6 +10,7 @@ const userEndpoints = {
   register: `${baseUser}/register`,
   authenticate: `${baseUser}/authenticate`,
   refreshToken: `${baseUser}/refresh-token`,
+  getUserData: `${baseUser}/get-user-data`,
   updateClaims: `${baseUser}/edit-user-claims`
 };
 
@@ -44,6 +45,10 @@ export const register = ({
 
 export const authenticate = (email, password) => {
   return axios.post(userEndpoints.authenticate, { email, password });
+};
+
+export const getUserData = () => {
+  return axios.get(userEndpoints.getUserData);
 };
 
 export const refreshToken = () => {

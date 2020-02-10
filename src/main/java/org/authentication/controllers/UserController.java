@@ -59,6 +59,13 @@ public class UserController {
         return ResponseEntity.ok(tokenRole);
     }
 
+    @RequestMapping(value = "/get-user-data", method = RequestMethod.POST)
+    public ResponseEntity<?> getUserFromRequest(@RequestHeader("Authorization") String token) {
+        String jwtToken = token.substring(7);
+        String email = this.jwtService.getEmailFromToken(jwtToken);
+        return ResponseEntity.ok(this.userService.findUserByEmail(email));
+    }
+
     @RequestMapping(value = "/filter-user", method = RequestMethod.POST)
     public ResponseEntity<?> filterUser(@RequestBody UserFilter userfilter) {
         List<User> users = this.userService.findUserByContainingEmailFirstNameLastName(userfilter.email, userfilter.firstName, userfilter.lastName);
