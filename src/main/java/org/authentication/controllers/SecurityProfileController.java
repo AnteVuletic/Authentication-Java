@@ -18,6 +18,14 @@ public class SecurityProfileController {
         this.securityProfileService = securityProfileService;
     }
 
+    //CREATE
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public ResponseEntity<SecurityProfile> add(@RequestBody SecurityProfile securityProfile) {
+        SecurityProfile securityProfileDb = this.securityProfileService.addSecurityProfile(securityProfile);
+        return ResponseEntity.ok(securityProfileDb);
+    }
+
+    //READ
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<ArrayList<SecurityProfile>> getAll() {
         ArrayList<SecurityProfile> securityProfiles = this.securityProfileService.getAllSecurityProfiles();
@@ -30,15 +38,10 @@ public class SecurityProfileController {
         return ResponseEntity.ok(users);
     }
 
+    //UPDATE
     @RequestMapping(value = "/edit-user", method = RequestMethod.POST)
     public ResponseEntity<?> editUser(@RequestBody UserNewProfile userNewProfile) {
         this.securityProfileService.editUserSecurityProfile(userNewProfile.user, userNewProfile.securityProfile);
         return ResponseEntity.ok("User edited");
-    }
-
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<SecurityProfile> add(@RequestBody SecurityProfile securityProfile) {
-        SecurityProfile securityProfileDb = this.securityProfileService.addSecurityProfile(securityProfile);
-        return ResponseEntity.ok(securityProfileDb);
     }
 }

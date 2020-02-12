@@ -9,8 +9,10 @@ import { ScreenContainer } from "../index.styled";
 const Profiles = () => {
   const [profiles, setProfiles] = useState([]);
   const [newProfile, setNewProfile] = useState("");
+
   const refreshProfiles = () => {
     getAllSecurityProfiles().then(({ data }) => {
+      console.log(data);
       setProfiles(data);
       setNewProfile("");
     });
@@ -28,9 +30,9 @@ const Profiles = () => {
 
   return (
     <ScreenContainer>
-      <Accordion>
-        <ListGroup as="ul">
-          {profiles.map((profile, index) => {
+      <div className="d-flex">
+      <ListGroup as="ul">
+          {profiles.length > 0 && profiles.map((profile, index) => {
             return (
               <ListGroup.Item as="li" key={index}>
                 {profile.name}
@@ -38,22 +40,16 @@ const Profiles = () => {
             );
           })}
         </ListGroup>
-        <ListGroup.Item as="li">
-          <Form.Group>
-            <Form.Label>New profile name:</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter profile name"
-              value={newProfile}
-              minLength='3'
-              onChange={({ target: { value } }) => setNewProfile(value)}
-            />
-            <Button variant="primary" onClick={addNewProfile}>
-              Add
-            </Button>
-          </Form.Group>
-        </ListGroup.Item>
-      </Accordion>
+      <ListGroup as="ul">
+          {profiles.length > 0 && profiles.map((profile, index) => {
+            return (
+              <ListGroup.Item as="li" key={index}>
+                {profile.description}
+              </ListGroup.Item>
+            );
+          })}
+        </ListGroup>
+      </div>
     </ScreenContainer>
   );
 };

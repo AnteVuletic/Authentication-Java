@@ -107,3 +107,9 @@ export const ClaimItem = styled.li`
     margin-right: 16px;
   }
 `;
+
+export const AltModal = styled.div`
+  background-color: #ffffff;
+  border-radius: 8px;
+  margin: 80px;
+`;

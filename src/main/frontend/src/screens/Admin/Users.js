@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { getAllSecurityProfiles, getAllUsersBySecurityProfileId } from "../../services/common";
+import {
+  getAllSecurityProfiles,
+  getAllUsersBySecurityProfileId,
+  getFilteredUsers,
+  getAllClaims,
+  getUsersByClaimId
+} from "../../services/common";
 import { ScreenContainer } from "../index.styled";
 import { Form, Table } from "react-bootstrap";
 
@@ -10,11 +16,23 @@ const Users = () => {
   const [filteredSecurityProfile, _setFilteredSecurityProfile] = useState(
     "all"
   );
+  const [selectedClaim, setSelectedClaim] = useState("all");
+  const [allClaims, setAllClaims] = useState([]);
   const [securityProfiles, setSecurityProfiles] = useState([]);
+  const [filterEmail, setFilterEmail] = useState("");
+  const [filterFirstName, setFilterFirstName] = useState("");
+  const [filterLastName, setFilterLastName] = useState("");
 
   useEffect(() => {
     getAllSecurityProfiles().then(({ data }) => {
+      console.log(data);
       setSecurityProfiles(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    getAllClaims().then(({ data }) => {
+      setAllClaims(data);
     });
   }, []);
 
@@ -28,7 +46,7 @@ const Users = () => {
     const { data } = await getAllSecurityProfiles();
 
     const allUsers = await Promise.all(
-        data.map(async securityProfile => {
+      data.map(async securityProfile => {
         const users = await getAllUsersBySecurityProfileId(
           securityProfile.securityProfileId
         );
@@ -41,6 +59,10 @@ const Users = () => {
   };
 
   const refreshUsersBySecurityProfileId = id => {
+    setFilterEmail("");
+    setFilterFirstName("");
+    setFilterLastName("");
+
     id !== "all" &&
       getAllUsersBySecurityProfileId(id).then(({ data }) => {
         setUsers(data);
@@ -52,6 +74,33 @@ const Users = () => {
     refreshUsersBySecurityProfileId(id);
   };
 
+  const handleKeyPress = e => {
+    if (e.key === "Enter") {
+      getFilteredUsers({
+        email: filterEmail,
+        firstName: filterFirstName,
+        lastName: filterLastName
+      }).then(res => setUsers(res.data));
+    }
+  };
+
+  const handleChangeClaim = async e => {
+    const claimId = e.target.value;
+
+    if (claimId === "all") {
+      setSelectedClaim("all");
+      return getAllUsers();
+    }
+
+    const { data } = await getUsersByClaimId(+claimId);
+
+    setUsers(data);
+    setSelectedClaim(claimId);
+    setFilterEmail("");
+    setFilterFirstName("");
+    setFilterLastName("");
+  };
+
   return (
     <ScreenContainer>
       <Table striped bordered hover>
@@ -61,13 +110,37 @@ const Users = () => {
             <th>first name</th>
             <th>last name</th>
             <th>security profile</th>
-            <th>#</th>
+            <th>claims</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td colSpan="3">
-              <input type="text" placeholder="search"></input>
+            <td>
+              <input
+                type="text"
+                placeholder="email"
+                onKeyPress={handleKeyPress}
+                value={filterEmail}
+                onChange={e => setFilterEmail(e.target.value)}
+              ></input>
+            </td>
+            <td>
+              <input
+                type="text"
+                placeholder="first name"
+                onKeyPress={handleKeyPress}
+                value={filterFirstName}
+                onChange={e => setFilterFirstName(e.target.value)}
+              ></input>
+            </td>
+            <td>
+              <input
+                type="text"
+                placeholder="last name"
+                onKeyPress={handleKeyPress}
+                value={filterLastName}
+                onChange={e => setFilterLastName(e.target.value)}
+              ></input>
             </td>
             <td>
               <Form.Control
@@ -77,17 +150,31 @@ const Users = () => {
                   setFilteredSecurityProfile(e.target.value);
                 }}
               >
-                <option value="all">all users</option>
-                {/* {securityProfiles.map((securityProfile, index) => (
+                <option value='all'>all users</option>
+                {securityProfiles.length > 0 && securityProfiles.map((securityProfile, index) => (
                   <option key={index} value={securityProfile.securityProfileId}>
                     {securityProfile.name}
                   </option>
-                ))} */}
+                ))}
+              </Form.Control>
+            </td>
+            <td>
+              <Form.Control
+                as="select"
+                value={selectedClaim}
+                onChange={handleChangeClaim}
+              >
+                <option value="all">all claims</option>
+                {allClaims.map((claim, index) => (
+                  <option key={index} value={claim.claimId}>
+                    {claim.name}
+                  </option>
+                ))}
               </Form.Control>
             </td>
           </tr>
           {users.map((user, index) => (
-            <UserCard key={index} user={user} />
+            <UserCard key={index} user={user} securityProfiles={securityProfiles} />
           ))}
         </tbody>
       </Table>

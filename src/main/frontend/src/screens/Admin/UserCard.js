@@ -10,14 +10,13 @@ import { Modal, Button } from "react-bootstrap";
 
 import { ModalContainer, ClaimSpacer, ClaimItem } from "../index.styled";
 
-const UserModal = ({ user, userClaims, handleClose, hasSaved }) => {
+const UserModal = ({ user, userClaims, handleClose }) => {
   const [newClaims, setNewClaims] = useState(userClaims);
   const [availableClaims, setAvailableClaims] = useState([]);
 
   useEffect(() => {
-    getAllClaims().then(res => {
-      const allClaims = res.data;
-      const available = allClaims.filter(
+    getAllClaims().then(({ data }) => {
+      const available = data.filter(
         claim => !newClaims.some(c => c.claimId === claim.claimId)
       );
 
@@ -59,7 +58,7 @@ const UserModal = ({ user, userClaims, handleClose, hasSaved }) => {
         </Modal.Header>
         <tbody>
           <tr>
-            
+
           </tr>
         </tbody>
         <Modal.Body>
@@ -102,23 +101,30 @@ const UserModal = ({ user, userClaims, handleClose, hasSaved }) => {
   );
 };
 
-const UserCard = ({ user }) => {
+const UserCard = ({ user, securityProfiles }) => {
   const [areClaimsDisplayed, setAreClaimsDisplayed] = useState(false);
   const [userClaims, setUserClaims] = useState([]);
 
-  const refreshUserClaims = useCallback(() => {
+  useEffect(() => {
     getAllUserClaims({ userId: user.userId }).then(({ data }) =>
       setUserClaims(data)
     );
   }, [user.userId]);
 
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
   const toggleClaims = () => {
     setAreClaimsDisplayed(!areClaimsDisplayed);
   };
+
+  const getSecurityProfileNameFromId = (id) => {
+    let securityProfileName = ""
+    securityProfiles.forEach(securityProfile => {
+      if (securityProfile.securityProfileId === id) {
+        securityProfileName = securityProfile.name;
+        return;
+      }
+    });
+    return securityProfileName;
+  }
 
   return (
     <>
@@ -127,17 +133,16 @@ const UserCard = ({ user }) => {
           user={user}
           userClaims={userClaims}
           handleClose={toggleClaims}
-          hasSaved={refetch}
         />
       )}
       <tr>
         <td>{user.email}</td>
         <td>{user.firstName}</td>
         <td>{user.lastName}</td>
-        <td>{user.securityProfile.name}</td>
+        <td>{getSecurityProfileNameFromId(user.securityProfile.securityProfileId)}</td>
         <td>
           <Button variant="secondary" onClick={toggleClaims}>
-            Claims
+            view/edit
           </Button>
         </td>
       </tr>

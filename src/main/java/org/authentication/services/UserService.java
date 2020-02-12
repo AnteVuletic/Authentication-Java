@@ -42,8 +42,15 @@ public class UserService implements UserDetailsService {
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
+    public List<User>getAllUsers(){
+        List<User> users = this.userRepository.findAll();
+        users.forEach( user -> {
+            user.securityProfile.users = null;
+        });
+        return users;
+    }
+
     public void addUser(User user) {
-        if(this.userRepository.findByEmail(user.email) != null) return;
         SecurityProfile securityProfile = this.securityProfileRepository.findSecurityProfileByName("UserNotOwner");
         user.userId =  UUID.randomUUID().toString();
         user.password = this.bCryptPasswordEncoder.encode(user.password);
@@ -51,15 +58,16 @@ public class UserService implements UserDetailsService {
         this.userRepository.save(user);
     }
 
-    public void updateUserDetails(String userId, String email, String firstName, String lastName) {
-        if(this.userRepository.findByEmail(email) != null) return;
+    public User updateUserDetails(String userId, String email, String firstName, String lastName) {
+        if(this.userRepository.findById(userId) == null) return null;
         Optional<User> userOptional = this.userRepository.findById(userId);
-        if (!userOptional.isPresent()) return;
+        if (!userOptional.isPresent()) return null;
         User user = userOptional.get();
         user.email = email;
         user.firstName = firstName;
         user.lastName = lastName;
         this.userRepository.save(user);
+        return user;
     }
 
     public void resetUserPassword(String userId, String oldPassword, String newPassword) {
@@ -75,14 +83,15 @@ public class UserService implements UserDetailsService {
     public void updateUserClaims(User user, List<Claim> claims) {
         if (!this.securityProfileService.validateLoggedInUserIsSuperAdmin()) throw new AuthorizationServiceException("User not super admin");
         List<UserClaim> currentClaims = this.userClaimRepository.findAllByUser_UserId(user.userId);
-        User userToEdit = this.userRepository.findByEmail(user.email);
+        Optional<User> userToEdit = this.userRepository.findById(user.userId);
+        User gottenUser = userToEdit.get();
 
         currentClaims.forEach(userClaim -> {
             this.userClaimRepository.delete(userClaim);
         });
 
         claims.forEach(claim -> {
-            this.userClaimRepository.save(new UserClaim(claim, userToEdit));
+            this.userClaimRepository.save(new UserClaim(claim, gottenUser));
         });
     }
 
@@ -94,20 +103,20 @@ public class UserService implements UserDetailsService {
             users.add(userClaim.user);
         });
 
-        users.forEach(user -> {user.securityProfile.users = null;});
+        users.forEach(user -> {user.securityProfile.users = null; user.userClaims = null;});
 
         return users;
     }
 
     public User findUserByEmail(String email) {
-        User user = this.userRepository.findByEmail(email);
+        User user = this.userRepository.getByEmail(email);
         user.securityProfile.users = null;
         return user;
     }
 
     public List<User> findUserByContainingEmailFirstNameLastName(String email, String firstName, String lastName) {
         List<User> users = this.userRepository.findAllByEmailContainsAndFirstNameContainsAndLastNameContains(email, firstName, lastName);
-        users.forEach(user -> {user.securityProfile.users = null;});
+        users.forEach(user -> {user.securityProfile.users = null; user.userClaims = null;});
         return users;
     }
 
