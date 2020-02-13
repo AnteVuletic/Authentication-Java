@@ -17,6 +17,7 @@ const Profile = () => {
 
   useEffect(() => {
     getUserData().then(response => {
+      console.log(response.data);
       setUserId(response.data.userId);
       setEmail(response.data.email);
       setFirstName(response.data.firstName);
@@ -35,7 +36,7 @@ const Profile = () => {
 
   const confirmChangedPassword = () => {
     changePassword(userId, oldPassword, newPassword).then(response => {
-      console.log(response);
+      setIsModalOpen(false);
     });
   }
 
@@ -79,7 +80,7 @@ const Profile = () => {
           <tr className="d-flex justify-content-center">
             <td>Claims</td>
           </tr>
-          {userClaims.map((claim, index) => (
+          {userClaims && userClaims.map((claim, index) => (
             <tr key={index}>
               <td>
                 <span>{claim.name}</span>

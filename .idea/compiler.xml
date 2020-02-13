@@ -9,8 +9,5 @@
         <module name="authentication-fintech" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="authentication-fintech" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

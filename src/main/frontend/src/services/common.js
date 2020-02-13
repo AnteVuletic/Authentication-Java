@@ -13,7 +13,6 @@ const userEndpoints = {
   authenticate: `${baseUser}/authenticate`,
   refreshToken: `${baseUser}/refresh-token`,
   getUserData: `${baseUser}/get-user-data`,
-  updateClaims: `${baseUser}/edit-user-claims`,
   getFiltered: `${baseUser}/filter-user`,
   getByClaimId: `${baseUser}/get-by-claim`,
   editUserData: `${baseUser}/edit-user-data`,

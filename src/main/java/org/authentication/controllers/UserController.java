@@ -1,5 +1,6 @@
 package org.authentication.controllers;
 
+import io.swagger.annotations.Api;
 import org.authentication.datatransferobjects.AddClaimUser;
 import org.authentication.datatransferobjects.TokenRole;
 import org.authentication.datatransferobjects.UserEditPassword;
@@ -27,6 +28,7 @@ public class UserController {
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
 
+
     public UserController(
             UserService userService,
             JWTService jwtService,
@@ -48,7 +50,8 @@ public class UserController {
     public ResponseEntity<?> getUserFromRequest(@RequestHeader("Authorization") String token) {
         String jwtToken = token.substring(7);
         String email = this.jwtService.getEmailFromToken(jwtToken);
-        return ResponseEntity.ok(this.userService.findUserByEmail(email));
+        User user = this.userService.findUserByEmail(email);
+        return ResponseEntity.ok(user);
     }
 
     @RequestMapping(value = "/filter-user", method = RequestMethod.POST)
@@ -56,6 +59,7 @@ public class UserController {
         List<User> users = this.userService.findUserByContainingEmailFirstNameLastName(userfilter.email, userfilter.firstName, userfilter.lastName);
         return ResponseEntity.ok(users);
     }
+
     @RequestMapping(value = "/get", method = RequestMethod.GET)
     public ResponseEntity<?> getAllUsers() {
         List<User> users = this.userService.getAllUsers();

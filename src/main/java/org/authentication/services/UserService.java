@@ -111,6 +111,8 @@ public class UserService implements UserDetailsService {
     public User findUserByEmail(String email) {
         User user = this.userRepository.getByEmail(email);
         user.securityProfile.users = null;
+        user.setUserClaims(userClaimRepository.findAllByUser_UserId(user.userId));
+        user.userClaims.forEach(userClaim -> {userClaim.user = null; userClaim.claim.claims = null;});
         return user;
     }
 
