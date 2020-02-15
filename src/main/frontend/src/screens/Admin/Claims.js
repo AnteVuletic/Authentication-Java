@@ -85,17 +85,12 @@ const UsersModal = ({ claim, onClose }) => {
   };
 
   const addUsersToClaim = async () => {
-    console.log(users)
-    console.log(usersToAdd)
     const usersToRemove = users.filter(user =>
       usersToAdd.some(u => u.userId === user.userId && !u.checked && u.checked !== undefined)
     );
     const toAdd = usersToAdd.filter(
       user => !users.some(u => u.userId === user.userId)
     );
-
-    console.log('remove', usersToRemove)
-    console.log('add', toAdd)
 
     await Promise.all(
       usersToRemove.map(async user => await deleteUserClaim({ claim, user }))

@@ -14,10 +14,10 @@ const Profile = () => {
   const [securityProfile, setSecurityProfile] = useState([]);
   const [userClaims, setUserClaims] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState('');
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     getUserData().then(response => {
-      console.log(response.data);
       setUserId(response.data.userId);
       setEmail(response.data.email);
       setFirstName(response.data.firstName);
@@ -27,15 +27,25 @@ const Profile = () => {
     })
   }, [])
 
+  const validateResetPassword = () => {
+    if (newPassword !== repeatedPassword) {
+      return 'Passwords must match';
+    }
+    return null;
+  }
+
   const confirmChanges = () => {
-    console.log({ userId, email, firstName, lastName, userClaims, securityProfile });
     editUserData({ userId, email, firstName, lastName, userClaims, securityProfile }).then(response => {
       console.log(response);
     })
   }
 
   const confirmChangedPassword = () => {
-    changePassword(userId, oldPassword, newPassword).then(response => {
+    const errorMessage = validateResetPassword();
+
+    setError(errorMessage)
+
+    !errorMessage && changePassword(userId, oldPassword, newPassword).then(response => {
       setIsModalOpen(false);
     });
   }
@@ -122,6 +132,11 @@ const Profile = () => {
                     <input type="password" onChange={e => { setRepeatedPassword(e.target.value) }} />
                   </td>
                 </tr>
+                {error && <tr>
+                  <td>
+                    {error}
+                  </td>
+                </tr>}
               </tbody>
             </Table>
           </Modal.Body>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { getFilteredUsers } from "../../services/common";
+import { getFilteredUsers, getAllSecurityProfiles, getAllUsersBySecurityProfileId } from "../../services/common";
 import { ScreenContainer } from "../index.styled";
 import { Table, Button } from "react-bootstrap";
 import { useEffect } from "react";
@@ -10,39 +10,73 @@ const UserList = ({ usersToAdd, users, updateUsersToAdd }) => {
   const [filterLastName, setFilterLastName] = useState("");
   const [usersFiltered, setUsersFiltered] = useState([]);
 
-  useEffect(() => {
-    getFilteredUsers({
-      email: "",
-      firstName: "",
-      lastName: ""
-    }).then(({ data }) =>
-      setUsersFiltered(
-        data.map(user => {
-          return {
-            ...user,
-            checked: users.some(u => u.userId === user.userId)
-          };
-        })
-      )
-    );
-  }, [users]);
 
-  const handleKeyPress = e => {
-    if (e.key === "Enter") {
+  const getAllUsers = async () => {
+    const { data } = await getAllSecurityProfiles();
+
+    const allUsers = await Promise.all(
+      data.map(async securityProfile => {
+        const users = await getAllUsersBySecurityProfileId(
+          securityProfile.securityProfileId
+        );
+
+        return users.data;
+      })
+    );
+
+    setUsersFiltered(allUsers.flat());
+  };
+
+  useEffect(() => {
+    if (
+      !!filterEmail ||
+      !!filterFirstName ||
+      !!filterLastName) {
       getFilteredUsers({
-        email: filterEmail,
-        firstName: filterFirstName,
-        lastName: filterLastName
-      }).then(({ data }) =>
+        email: "",
+        firstName: "",
+        lastName: ""
+      }).then(({ data }) => {
+        console.log(data)
         setUsersFiltered(
           data.map(user => {
             return {
               ...user,
-              checked: usersToAdd.some(u => u.userId === user.userId)
+              checked: users.some(u => u.userId === user.userId)
             };
           })
         )
-      );
+      });
+    } else {
+      getAllUsers()
+    }
+  }, [users]);
+
+  const handleKeyPress = e => {
+    if (e.key === "Enter") {
+
+      if (
+        !!filterEmail ||
+        !!filterFirstName ||
+        !!filterLastName) {
+        getFilteredUsers({
+          email: filterEmail,
+          firstName: filterFirstName,
+          lastName: filterLastName
+        }).then(({ data }) =>
+          setUsersFiltered(
+            data.map(user => {
+              return {
+                ...user,
+                checked: usersToAdd.some(u => u.userId === user.userId)
+              };
+            })
+          )
+        );
+      }
+      else {
+        getAllUsers()
+      }
     }
   };
 

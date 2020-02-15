@@ -67,7 +67,6 @@ export const getAllUsers = () => {
 };
 
 export const editUserData = (user) => {
-  console.log({ user: user });
   return axios.post(userEndpoints.editUserData,  user );
 };
 

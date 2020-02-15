@@ -25,7 +25,6 @@ const Users = () => {
 
   useEffect(() => {
     getAllSecurityProfiles().then(({ data }) => {
-      console.log(data);
       setSecurityProfiles(data);
     });
   }, []);
@@ -76,11 +75,22 @@ const Users = () => {
 
   const handleKeyPress = e => {
     if (e.key === "Enter") {
-      getFilteredUsers({
-        email: filterEmail,
-        firstName: filterFirstName,
-        lastName: filterLastName
-      }).then(res => setUsers(res.data));
+      if (
+        !!filterEmail ||
+        !!filterFirstName ||
+        !!filterLastName
+      ) {
+        getFilteredUsers({
+          email: filterEmail,
+          firstName: filterFirstName,
+          lastName: filterLastName || ''
+        }).then(res => {
+          setUsers(res.data)
+        });
+      }
+      else (
+        getAllUsers()
+      )
     }
   };
 

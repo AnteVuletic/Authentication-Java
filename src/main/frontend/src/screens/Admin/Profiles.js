@@ -8,7 +8,6 @@ const Profiles = () => {
 
   const refreshProfiles = () => {
     getAllSecurityProfiles().then(({ data }) => {
-      console.log(data);
       setProfiles(data);
     });
   };
